@@ -1,6 +1,5 @@
 package cn.steve.notification;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationManagerCompat;
@@ -28,13 +27,11 @@ public class NotificationStatusActivity extends AppCompatActivity {
         buttonMain.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Build.VERSION.SDK_INT > 18) {
-                    textView.setText(isEnable() + "");
-                } else {
-                    textView.setText(NotificationsUtils.isNotificationEnabled(NotificationStatusActivity.this) + "");
+                boolean notificationEnabled = NotificationsUtils.isNotificationEnabled(NotificationStatusActivity.this);
+                textView.setText(notificationEnabled + "");
+                if (!notificationEnabled) {
+                    NotificationsUtils.go2Setting(NotificationStatusActivity.this);
                 }
-
-
             }
         });
     }
@@ -51,6 +48,5 @@ public class NotificationStatusActivity extends AppCompatActivity {
     private boolean isEnable() {
         return NotificationManagerCompat.from(this).areNotificationsEnabled();
     }
-
 
 }
