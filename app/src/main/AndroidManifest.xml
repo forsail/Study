@@ -494,11 +494,7 @@
                     android:value="cn.steve.notification.NotificationHandlerActivity"/>
         </activity>
         <activity android:name="cn.steve.notification.NotificationStatusActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <!-- ContentProvider demo -->
@@ -592,6 +588,18 @@
 
         <!--时间价格表-->
         <activity android:name="cn.steve.dateCalendar.DatePickerActivity">
+
+        </activity>
+
+        <!--activity animator-->
+        <activity android:name="cn.steve.animator.activityanimator.ActivityAnimatorMain">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="cn.steve.animator.activityanimator.LollipopAnimatorActivity">
 
         </activity>
 

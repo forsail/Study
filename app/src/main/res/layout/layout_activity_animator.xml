@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <Button
+            android:id="@+id/buttonPre"
+            android:text="5.0之前的版本"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    <Button
+            android:id="@+id/buttonLollipop"
+            android:text="5.0之后的版本"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+</LinearLayout>
