@@ -592,7 +592,7 @@
         </activity>
 
         <!--activity animator-->
-        <activity android:name="cn.steve.animator.activityanimator.ActivityAnimatorMain">
+        <activity android:name="cn.steve.animator.activityanimator.ActivityAnimatorMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -600,7 +600,12 @@
             </intent-filter>
         </activity>
         <activity android:name="cn.steve.animator.activityanimator.LollipopAnimatorActivity">
-
+        </activity>
+        <activity android:name="cn.steve.animator.activityanimator.LollipopAnimatorDetailActivity">
+        </activity>
+        <activity android:name="cn.steve.animator.activityanimator.PreLollipopAnimatorActivity">
+        </activity>
+        <activity android:name="cn.steve.animator.activityanimator.PreLollipopAnimatorDetailActivity">
         </activity>
 
     </application>
