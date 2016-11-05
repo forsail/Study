@@ -12,6 +12,9 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
@@ -33,6 +36,16 @@ public class UILApplication extends Application {
         // Initialize ImageLoader with configuration.
         ImageLoader.getInstance().init(config.build());
     }
+
+    private void initRealm() {
+        Realm.init(this);
+        RealmConfiguration configuration = new RealmConfiguration.Builder()
+            .name("MyRealm.realm")
+            .deleteRealmIfMigrationNeeded()
+            .build();
+        Realm.setDefaultConfiguration(configuration);
+    }
+
 
     @TargetApi(Build.VERSION_CODES.GINGERBREAD)
     @Override
@@ -56,6 +69,7 @@ public class UILApplication extends Application {
             if (defaultProcess) {
                 Log.e("UILApplication", "默认的初始化");
                 initImageLoader(getApplicationContext());
+                initRealm();
             }
         }
     }
