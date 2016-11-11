@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.steve.NameGenerate;
 
 @NameGenerate(name = "LoginActivity")
- public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
