@@ -31,5 +31,6 @@ dependencies {
         compile project(':module_login')
         compile project(':module_mine')
     }
+    compile project(':lib_processor')
 
 }

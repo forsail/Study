@@ -3,9 +3,6 @@ package com.lvmama.module_login;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.steve.NameGenerate;
-
-@NameGenerate(name = "LoginActivity")
 public class LoginActivity extends AppCompatActivity {
 
     @Override
