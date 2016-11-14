@@ -22,6 +22,7 @@ public class DatePriceAdapter extends BaseDatePriceAdapter<AdapterItem> {
 
     private ArrayList<AdapterItem> datas;
     private AdapterItem currentSelectedItem = null;
+    private int scrollPosition = 0;
 
     public void setDatas(ArrayList<AdapterItem> datas) {
         this.datas = datas;
@@ -146,6 +147,7 @@ public class DatePriceAdapter extends BaseDatePriceAdapter<AdapterItem> {
     protected AdapterItem getSelected() {
         return currentSelectedItem;
     }
+
 
     public static class ItemViewHolder extends RecyclerView.ViewHolder {
 

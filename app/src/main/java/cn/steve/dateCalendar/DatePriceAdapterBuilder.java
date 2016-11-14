@@ -3,7 +3,6 @@ package cn.steve.dateCalendar;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -15,6 +14,7 @@ import cn.steve.dateCalendar.basic.DayPickerBuilder;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 /**
@@ -26,6 +26,9 @@ public class DatePriceAdapterBuilder extends BaseBuilder {
     private ArrayMap<String, String> vacations;
     private ArrayMap<String, DatePriceVO> datas;
     private String selectedDate = "";
+    private AdapterItem selectedItem;
+    private OnItemClickListener onItemClickListener;
+    private int selectedPosition = 0;
 
     public DatePriceAdapterBuilder() {
         init();
@@ -44,25 +47,42 @@ public class DatePriceAdapterBuilder extends BaseBuilder {
         return this;
     }
 
+    public DatePriceAdapterBuilder withOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+        return this;
+    }
+
     public void getDayAdapter(final ArrayMap<String, DatePriceVO> datas, Subscriber<BaseDatePriceAdapter> subscriber) {
         Observable.create(new Observable.OnSubscribe<BaseDatePriceAdapter>() {
             @Override
             public void call(Subscriber<? super BaseDatePriceAdapter> subscriber) {
                 setDatas(datas);
-                ArrayList<AdapterItem> adapterItems = generateAdapterDatas();
+                final ArrayList<AdapterItem> adapterItems = generateAdapterDatas();
                 final DatePriceAdapter adapter = new DatePriceAdapter();
                 adapter.setOnItemClickListener(new BaseDatePriceAdapter.OnAdapterItemClickListener() {
                     @Override
                     public void onItemClick(RecyclerView parent, View view, int position, long id) {
-                        Toast.makeText(view.getContext(), adapter.getItem(position).getDate(), Toast.LENGTH_SHORT).show();
+                        if (onItemClickListener != null) {
+                            onItemClickListener.onClick(adapterItems.get(position));
+                        }
                     }
                 });
                 adapter.setDatas(adapterItems);
+                adapter.setScrollPosition(selectedPosition);
                 subscriber.onNext(adapter);
             }
         })
             .subscribeOn(Schedulers.computation())
             .observeOn(AndroidSchedulers.mainThread())
+            .flatMap(new Func1<BaseDatePriceAdapter, Observable<BaseDatePriceAdapter>>() {
+                @Override
+                public Observable<BaseDatePriceAdapter> call(BaseDatePriceAdapter baseDatePriceAdapter) {
+                    if (selectedItem != null && onItemClickListener != null) {
+                        onItemClickListener.onClick(selectedItem);
+                    }
+                    return Observable.just(baseDatePriceAdapter);
+                }
+            })
             .subscribe(subscriber);
     }
 
@@ -86,7 +106,8 @@ public class DatePriceAdapterBuilder extends BaseBuilder {
 
         // 2. get all the DayItems
         DayPickerBuilder builder = new DayPickerBuilder();
-        for (DateYearMonth dateYearMonth : dateYearMonthArrayList) {
+        for (int i = 0; i < dateYearMonthArrayList.size(); i++) {
+            DateYearMonth dateYearMonth = dateYearMonthArrayList.get(i);
 
             // group
             AdapterItem item = new AdapterItem();
@@ -95,6 +116,11 @@ public class DatePriceAdapterBuilder extends BaseBuilder {
             item.setGroup(year + "年" + month + "月");
             item.setAdapterItemType(AdapterItem.TYPE_GROUP);
             adapterItems.add(item);
+
+            DateYearMonth selectYearMonth = getYearMonth(selectedDate);
+            if (selectYearMonth.getYear() == year && selectYearMonth.getMonth() == month) {
+                this.selectedPosition = adapterItems.size() - 1;
+            }
 
             // items
             ArrayList<DayItem> c = builder.generateMonth(year, month);
@@ -118,6 +144,7 @@ public class DatePriceAdapterBuilder extends BaseBuilder {
             if (date != null) {
                 if (date.equals(selectedDate)) {
                     adapterItem.setSelected(true);
+                    selectedItem = adapterItem;
                 }
             }
             adapterItem.setDate(date);
@@ -138,6 +165,11 @@ public class DatePriceAdapterBuilder extends BaseBuilder {
         }
 
         return adapterItems;
+    }
+
+    public interface OnItemClickListener {
+
+        void onClick(AdapterItem item);
     }
 
 }

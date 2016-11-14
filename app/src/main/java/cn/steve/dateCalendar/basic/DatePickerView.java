@@ -49,4 +49,9 @@ public class DatePickerView extends FrameLayout {
         this.recyclerView.setAdapter(adapter);
     }
 
+    public void setScrollPosition(int position) {
+        this.recyclerView.scrollToPosition(position);
+    }
+
+
 }

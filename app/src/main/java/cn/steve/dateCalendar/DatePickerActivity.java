@@ -40,7 +40,8 @@ public class DatePickerActivity extends AppCompatActivity {
         }
 
         DatePriceAdapterBuilder builder = new DatePriceAdapterBuilder();
-        builder.withSelected("2016-11-11").getDayAdapter(datas, new Subscriber<BaseDatePriceAdapter>() {
+        String selectedDate = "2016-12-11";
+        builder.withSelected(selectedDate).getDayAdapter(datas, new Subscriber<BaseDatePriceAdapter>() {
             @Override
             public void onCompleted() {
 
@@ -54,6 +55,7 @@ public class DatePickerActivity extends AppCompatActivity {
             @Override
             public void onNext(BaseDatePriceAdapter baseDatePriceAdapter) {
                 datePickerView.setAdapter(baseDatePriceAdapter);
+                datePickerView.setScrollPosition(baseDatePriceAdapter.getScrollPosition());
             }
         });
 

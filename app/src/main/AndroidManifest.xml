@@ -588,16 +588,16 @@
 
         <!--时间价格表-->
         <activity android:name="cn.steve.dateCalendar.DatePickerActivity">
-
-        </activity>
-
-        <!--activity animator-->
-        <activity android:name="cn.steve.animator.activityanimator.ActivityAnimatorMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+
+        <!--activity animator-->
+        <activity android:name="cn.steve.animator.activityanimator.ActivityAnimatorMainActivity">
+
         </activity>
         <activity android:name="cn.steve.animator.activityanimator.LollipopAnimatorActivity">
         </activity>

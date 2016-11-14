@@ -13,8 +13,17 @@ public abstract class BaseDatePriceAdapter<T> extends RecyclerView.Adapter<Recyc
 
     protected RecyclerView recyclerView;
     protected OnAdapterItemClickListener onItemClickListener;
+    private int scrollPosition = 0;
 
     protected abstract T getSelected();
+
+    public int getScrollPosition() {
+        return scrollPosition;
+    }
+
+    public void setScrollPosition(int posistion) {
+        this.scrollPosition = posistion;
+    }
 
 
     public void setOnItemClickListener(OnAdapterItemClickListener onItemClickListener) {
