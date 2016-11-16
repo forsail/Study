@@ -23,14 +23,5 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:25.0.0'
-
-    // 防止重复依赖
-    if (isDebug) {
-        compile project(':router')
-    } else {
-        compile project(':module_login')
-        compile project(':module_mine')
-    }
     compile project(':lib_processor')
-
 }
