@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        tools:context="cn.steve.recyclerview.expandable.ExpandableRecyclerViewActivity">
+
+    <android.support.design.widget.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabSelectedTextColor="@android:color/holo_blue_bright"
+            app:tabTextColor="@android:color/black"
+            app:tabIndicatorColor="@android:color/holo_blue_bright"/>
+
+    <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_below="@id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+</RelativeLayout>

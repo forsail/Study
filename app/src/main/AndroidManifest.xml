@@ -146,7 +146,6 @@
 
         <!-- recyclerview -->
         <activity android:name="cn.steve.recyclerview.SimpleRecyclerViewMainActivity">
-
         </activity>
         <activity android:name="cn.steve.recyclerview.multipleitem.MultipleItemMainActivity"/>
         <activity android:name="cn.steve.recyclerview.itemanimator.RecyclerViewItemAnimatorActivity">
@@ -494,7 +493,6 @@
                     android:value="cn.steve.notification.NotificationHandlerActivity"/>
         </activity>
         <activity android:name="cn.steve.notification.NotificationStatusActivity">
-
         </activity>
 
         <!-- ContentProvider demo -->
@@ -583,21 +581,14 @@
         </receiver>
 
         <activity android:name="cn.steve.share.view.AnFQNumEditTextActivity">
-
         </activity>
 
-        <!--时间价格表-->
+        <!-- 时间价格表 -->
         <activity android:name="cn.steve.dateCalendar.DatePickerActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
-        <!--activity animator-->
+        <!-- activity animator -->
         <activity android:name="cn.steve.animator.activityanimator.ActivityAnimatorMainActivity">
-
         </activity>
         <activity android:name="cn.steve.animator.activityanimator.LollipopAnimatorActivity">
         </activity>
@@ -607,7 +598,14 @@
         </activity>
         <activity android:name="cn.steve.animator.activityanimator.PreLollipopAnimatorDetailActivity">
         </activity>
+        <!-- item可以被折叠-->
+        <activity android:name="cn.steve.recyclerview.expandable.ExpandableRecyclerViewActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
