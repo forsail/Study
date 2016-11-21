@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp">
+
+
+    <TextView
+            android:id="@+id/airClass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="经济舱"/>
+
+    <TextView
+            android:id="@+id/stock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/airClass"
+            android:layout_toEndOf="@id/airClass"
+            tools:text="(剩5张)"/>
+
+
+    <TextView
+            android:id="@+id/ticketPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/airClass"
+            android:layout_alignLeft="@id/airClass"
+            android:layout_alignStart="@id/airClass"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textColor="#D30775"
+            tools:text="-¥100 "/>
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_below="@id/ticketPrice"
+            android:background="#DDDDDD"/>
+
+    <ImageView
+            android:id="@+id/selectStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp"
+            android:src="@drawable/icon_emoji"/>
+
+</RelativeLayout>
