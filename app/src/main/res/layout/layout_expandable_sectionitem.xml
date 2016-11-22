@@ -4,14 +4,20 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp">
+        android:paddingLeft="10dp">
 
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentTop="true"
+            android:background="#DDDDDD"/>
 
     <TextView
             android:id="@+id/airClass"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             tools:text="经济舱"/>
 
     <TextView
@@ -20,6 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/airClass"
             android:layout_toEndOf="@id/airClass"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="5dp"
             tools:text="(剩5张)"/>
 
 
@@ -35,11 +43,6 @@
             android:textColor="#D30775"
             tools:text="-¥100 "/>
 
-    <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_below="@id/ticketPrice"
-            android:background="#DDDDDD"/>
 
     <ImageView
             android:id="@+id/selectStatus"

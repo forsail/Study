@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
@@ -15,13 +16,18 @@ import java.util.Set;
 
 public class ExpandableRecyclerViewHelper implements SectionItemClickListener, ExpandStatusListener {
 
+    private Context context;
     private RecyclerView recyclerView;
     private LinkedHashMap<SectionBean, ArrayList<SectionItemBean>> allData = new LinkedHashMap<>();
     private ArrayList<ExpandAdapterItem> mDisplayData = new ArrayList<>();
     private ExpandableAdapter adapter;
+    private SectionBean currentSection;
+    private OnItemSelectListener clickListener;
 
-    public ExpandableRecyclerViewHelper(Context context, RecyclerView recyclerView) {
+    public ExpandableRecyclerViewHelper(Context context, RecyclerView recyclerView, OnItemSelectListener clickListener) {
+        this.context = context;
         this.recyclerView = recyclerView;
+        this.clickListener = clickListener;
         adapter = new ExpandableAdapter(context, recyclerView);
         adapter.setData(mDisplayData);
         adapter.setExpandStatusListener(this);
@@ -39,6 +45,7 @@ public class ExpandableRecyclerViewHelper implements SectionItemClickListener, E
 
     public void generateList() {
         mDisplayData.clear();
+        boolean hasFocusSection = false;
         Set<Map.Entry<SectionBean, ArrayList<SectionItemBean>>> entries = allData.entrySet();
         for (Map.Entry<SectionBean, ArrayList<SectionItemBean>> entry : entries) {
             SectionBean key = entry.getKey();
@@ -46,6 +53,11 @@ public class ExpandableRecyclerViewHelper implements SectionItemClickListener, E
             ArrayList<SectionItemBean> value = entry.getValue();
 
             SectionItemBean selected = null;
+
+            if (key.isFocus()) {
+                hasFocusSection = true;
+                currentSection = key;
+            }
 
             if (key.isExpanded()) {
                 for (SectionItemBean sectionItemBean : value) {
@@ -69,6 +81,12 @@ public class ExpandableRecyclerViewHelper implements SectionItemClickListener, E
             expandBean.setSectionBean(key);
             mDisplayData.add(expandBean);
         }
+        if (!hasFocusSection) {
+            Iterator<Map.Entry<SectionBean, ArrayList<SectionItemBean>>> iterator = entries.iterator();
+            Map.Entry<SectionBean, ArrayList<SectionItemBean>> next = iterator.next();
+            SectionBean key = next.getKey();
+            key.setFocus(true);
+        }
         notifyDataChanged();
     }
 
@@ -79,15 +97,60 @@ public class ExpandableRecyclerViewHelper implements SectionItemClickListener, E
 
     @Override
     public void onSelected(SectionItemBean item) {
-
+        resetSelected();
+        item.setSelected(true);
+        if (currentSection != item.getSectionBean()) {
+            clearFocus();
+            resetExpand();
+        }
+        item.getSectionBean().setFocus(true);
+        clickListener.onSelected(item);
+        if (currentSection != item.getSectionBean()) {
+            generateList();
+        }
     }
 
     @Override
     public void onChangedStatus(ExpandBean expandBean) {
-        expandBean.setExpanded(!expandBean.isExpanded());
+        clearFocus();
+        resetExpand();
         SectionBean section = expandBean.getSectionBean();
-        section.setExpanded(expandBean.isExpanded());
+        section.setExpanded(!expandBean.isExpanded());
+        section.setFocus(true);
         generateList();
+    }
+
+    private void resetSelected() {
+        Set<Map.Entry<SectionBean, ArrayList<SectionItemBean>>> entries = allData.entrySet();
+        for (Map.Entry<SectionBean, ArrayList<SectionItemBean>> entry : entries) {
+            ArrayList<SectionItemBean> items = entry.getValue();
+            for (SectionItemBean item : items) {
+                item.setSelected(false);
+            }
+        }
+    }
+
+    private void clearFocus() {
+        Set<Map.Entry<SectionBean, ArrayList<SectionItemBean>>> entries = allData.entrySet();
+        for (Map.Entry<SectionBean, ArrayList<SectionItemBean>> entry : entries) {
+            SectionBean key = entry.getKey();
+            key.setFocus(false);
+        }
+    }
+
+    private void resetExpand() {
+        Set<Map.Entry<SectionBean, ArrayList<SectionItemBean>>> entries = allData.entrySet();
+        for (Map.Entry<SectionBean, ArrayList<SectionItemBean>> entry : entries) {
+            SectionBean key = entry.getKey();
+            key.setExpanded(false);
+        }
+    }
+
+
+    public interface OnItemSelectListener {
+
+        public void onSelected(SectionItemBean item);
+
     }
 
 }

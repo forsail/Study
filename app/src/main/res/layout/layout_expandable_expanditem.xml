@@ -41,5 +41,11 @@
             android:background="#DDDDDD"
             android:layout_alignParentBottom="true"/>
 
+    <View
+            android:id="@+id/selectBottomLine"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffd30775"
+            android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

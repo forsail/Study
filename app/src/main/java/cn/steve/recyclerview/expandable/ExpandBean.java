@@ -10,6 +10,12 @@ public class ExpandBean extends ExpandAdapterItem {
     private String name = "查看更多舱位";
     private boolean isExpanded;
     private SectionBean sectionBean;
+    private boolean isFocus;
+
+    public boolean isFocus() {
+        return sectionBean.isFocus();
+    }
+
 
     public SectionBean getSectionBean() {
         return sectionBean;

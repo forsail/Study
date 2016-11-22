@@ -18,6 +18,15 @@ public class SectionBean extends ExpandAdapterItem {
     private String middleStation;
     private String needTime;
     private boolean isExpanded;
+    private boolean isFocus;
+
+    public boolean isFocus() {
+        return isFocus;
+    }
+
+    public void setFocus(boolean focus) {
+        isFocus = focus;
+    }
 
     public String getNeedTime() {
         return needTime;

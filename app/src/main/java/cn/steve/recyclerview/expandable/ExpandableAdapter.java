@@ -89,6 +89,7 @@ public class ExpandableAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof SectionViewHolder) {
             SectionViewHolder sectionViewHolder = (SectionViewHolder) holder;
             SectionBean sectionBean = (SectionBean) data.get(position);
+            sectionViewHolder.selectTopLine.setVisibility(sectionBean.isFocus() ? View.VISIBLE : View.GONE);
             // TODO: 2016/11/21 icon not show
             sectionViewHolder.date.setText(sectionBean.getDate());
             sectionViewHolder.airline.setText(sectionBean.getAirline());
@@ -112,6 +113,7 @@ public class ExpandableAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         if (holder instanceof ExpandItemViewHolder) {
             ExpandItemViewHolder expandItemHolder = (ExpandItemViewHolder) holder;
             ExpandBean expandBean = (ExpandBean) data.get(position);
+            expandItemHolder.selectBottomLine.setVisibility(expandBean.isFocus() ? View.VISIBLE : View.GONE);
             expandItemHolder.expandStatus.setText(expandBean.getName());
             expandItemHolder.expandIcon.setImageResource(expandBean.isExpanded() ? R.drawable.arrow_up : R.drawable.arrow_down);
         }
@@ -147,11 +149,13 @@ public class ExpandableAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public static class SectionViewHolder extends RecyclerView.ViewHolder {
 
+        public View selectTopLine;
         public ImageView airlineIcon;
         public TextView date, airline, flight, airplane, startTime, startPort, endTime, destPort, needTime, middleStop;
 
         public SectionViewHolder(View view) {
             super(view);
+            selectTopLine = view.findViewById(R.id.selectTopLine);
             date = (TextView) view.findViewById(R.id.date);
             airlineIcon = (ImageView) view.findViewById(R.id.airlineIcon);
             airline = (TextView) view.findViewById(R.id.airline);
@@ -182,11 +186,13 @@ public class ExpandableAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public static class ExpandItemViewHolder extends RecyclerView.ViewHolder {
 
+        public View selectBottomLine;
         public TextView expandStatus;
         public ImageView expandIcon;
 
         public ExpandItemViewHolder(View view) {
             super(view);
+            selectBottomLine = view.findViewById(R.id.selectBottomLine);
             expandStatus = (TextView) view.findViewById(R.id.expandStatus);
             expandIcon = (ImageView) view.findViewById(R.id.expandIcon);
         }

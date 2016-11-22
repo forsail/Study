@@ -6,10 +6,19 @@ package cn.steve.recyclerview.expandable;
 
 public class SectionItemBean extends ExpandAdapterItem {
 
+    private SectionBean sectionBean;
     private String airClass;
     private int stock;
     private int price;
     private boolean isSelected = false;
+
+    public SectionBean getSectionBean() {
+        return sectionBean;
+    }
+
+    public void setSectionBean(SectionBean sectionBean) {
+        this.sectionBean = sectionBean;
+    }
 
     public boolean isSelected() {
         return isSelected;

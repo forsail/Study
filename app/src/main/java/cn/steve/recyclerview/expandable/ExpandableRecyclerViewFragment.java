@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -14,7 +15,7 @@ import java.util.LinkedHashMap;
 import cn.steve.study.R;
 
 
-public class ExpandableRecyclerViewFragment extends Fragment {
+public class ExpandableRecyclerViewFragment extends Fragment implements ExpandableRecyclerViewHelper.OnItemSelectListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -24,6 +25,7 @@ public class ExpandableRecyclerViewFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ExpandableRecyclerViewHelper expandableRecyclerViewHelper;
+    private TextView selectText;
 
     public ExpandableRecyclerViewFragment() {
     }
@@ -50,6 +52,7 @@ public class ExpandableRecyclerViewFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_expandable_recycler_view, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
+        selectText = (TextView) view.findViewById(R.id.selectText);
         main();
         return view;
     }
@@ -62,7 +65,7 @@ public class ExpandableRecyclerViewFragment extends Fragment {
             sectionBean.setAirlineIcon("");
             sectionBean.setAirline("中国国航");
             sectionBean.setFlight("CA1800");
-            sectionBean.setAirplane("空格A380");
+            sectionBean.setAirplane("空格A38" + i);
             sectionBean.setOriginTime("12:00");
             sectionBean.setOriginAirport("上海虹桥机场T1");
             sectionBean.setNeedTime("13h");
@@ -73,16 +76,21 @@ public class ExpandableRecyclerViewFragment extends Fragment {
             ArrayList<SectionItemBean> beens = new ArrayList<>();
             for (int i1 = 0; i1 < 4; i1++) {
                 SectionItemBean sectionItemBean = new SectionItemBean();
-                sectionItemBean.setAirClass("经济舱" + i);
-                sectionItemBean.setPrice(100);
-                sectionItemBean.setStock(i + 3);
+                sectionItemBean.setAirClass("经济舱" + i1);
+                sectionItemBean.setPrice(100 + i1);
+                sectionItemBean.setStock(i1 + 3);
+                sectionItemBean.setSectionBean(sectionBean);
                 beens.add(sectionItemBean);
             }
             allData.put(sectionBean, beens);
         }
-        expandableRecyclerViewHelper = new ExpandableRecyclerViewHelper(getActivity(), recyclerView);
+        expandableRecyclerViewHelper = new ExpandableRecyclerViewHelper(getActivity(), recyclerView, this);
         expandableRecyclerViewHelper.setAllData(allData);
         expandableRecyclerViewHelper.generateList();
     }
 
+    @Override
+    public void onSelected(SectionItemBean item) {
+        selectText.setText(item.getSectionBean().getDate() + item.getAirClass());
+    }
 }
