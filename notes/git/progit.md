@@ -532,15 +532,28 @@ $ git branch --no-merged
 远程仓库名字 “origin” 与分支名字 “master” 一样，在 Git 中并没有任何特别的含义一样。 同时 “master” 是当你运行 git init 时默认的起始分支名字，原因仅仅是它的广泛使用，“origin” 是当你运行 git clone 时默认的远程仓库名字。 如果你运行 git clone -o booyah，那么你默认的远程分支名字将会是 booyah/master。
 
 
+> 在本地的 master 分支做了一些工作，然而在同一时间，其他人推送提交到 git.ourcompany.com 并更新了它的 master 分支，那么你的提交历史将向不同的方向前进。 也许，只要你不与 origin 服务器连接，你的 origin/master 指针就不会移动.
+> 如果要同步你的工作，运行 git fetch origin 命令。 这个命令查找 “origin” 是哪一个服务器（在本例中，它是 git.ourcompany.com），从中抓取本地没有的数据，并且更新本地数据库，移动 origin/master 指针指向新的、更新后的位置。
 
 
+```shell
+$ git push origin master
+$ git push (remote) (branch):
+```
+这样可以将本地的master 分支推送到远程仓库对应的master分支.前提是有相应的写入权限.
+Git 自动将 master 分支名字展开为 refs/heads/master:refs/heads/master.
+推送本地的 master 分支来更新远程仓库上的 master 分支。
+git push origin branch1:branch2 来将本地的 branch1 分支推送到远程仓库上的 branch2 分支。
+
+- 如何避免每次输入密码
+如果你正在使用 HTTPS URL 来推送，Git 服务器会询问用户名与密码。 默认情况下它会在终端中提示服务器是否允许你进行推送。
+如果不想在每一次推送时都输入用户名与密码，你可以设置一个 “credential cache”。 最简单的方式就是将其保存在内存中几分钟，可以简单地运行 git config --global credential.helper cache 来设置它。
 
 
-
-
-
-
-
+```shell
+$ git push origin dev
+```
+下一次其他协作者从服务器上抓取数据时，他们会在本地生成一个远程分支 origin/dev，指向服务器的 dev 分支的引用：
 
 
 
