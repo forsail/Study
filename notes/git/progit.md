@@ -553,8 +553,29 @@ git push origin branch1:branch2 来将本地的 branch1 分支推送到远程仓
 ```shell
 $ git push origin dev
 ```
-下一次其他协作者从服务器上抓取数据时，他们会在本地生成一个远程分支 origin/dev，指向服务器的 dev 分支的引用：
+下一次其他协作者执行 fetch 指令从服务器上抓取数据时，他们会在本地生成一个远程分支 origin/dev，指向服务器的 dev 分支的引用.但是本地并不会自动生成对应的本地分支，只会有这个不能更改的跟踪指针。
 
+```shell
+$ git merge origin/dev
+$ git checkout -b dev origin/dev
+```
+
+对这个远程分支，可以采用 merge 指令将其合并到当前分支，或者直接另外建立一个基于这个远程分支的本地分支。
+
+从一个远程跟踪分支检出一个本地分支会自动创建一个叫做“跟踪分支”（有时候也叫做 “上游分支”）。 跟踪分支是与远程分支有直接关系的本地分支。
+
+
+```shell
+$ git checkout --track origin/serverfix
+```
+可以修改分支的跟踪的远程分支。
+
+```shell
+$ git branch -u origin/serverfix
+```
+通过这个命令，我们可以修改跟踪的远程分支。
+
+> 当设置好跟踪分支后，可以通过 @{upstream} 或 @{u} 快捷方式来引用它。 所以在 master 分支时并且它正在跟踪 origin/master 时，如果愿意的话可以使用 git merge @{u} 来取代 git merge origin/master。
 
 
 
