@@ -624,14 +624,13 @@
         <activity android:name="cn.steve.recyclerview.expandable.ExpandableRecyclerViewActivity">
         </activity>
         <activity android:name="cn.steve.map.BaiduMapActivity">
-
-
-        </activity>
-        <activity android:name="cn.steve.map.LocationDemo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name="cn.steve.map.LocationDemo">
+
         </activity>
         <service
                 android:name="com.baidu.location.f"

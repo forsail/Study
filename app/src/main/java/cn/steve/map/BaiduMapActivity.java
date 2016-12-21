@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
@@ -14,9 +15,12 @@ import com.baidu.location.Poi;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
@@ -37,12 +41,14 @@ public class BaiduMapActivity extends AppCompatActivity {
     private MapView mMapView = null;
     private TextView textView;
     private Handler handler = new Handler();
-
+    private BitmapDescriptor mCurrentMarker;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_baidumap);
+        mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding);
+
         mMapView = (MapView) findViewById(R.id.bmapView);
         textView = (TextView) findViewById(R.id.textView);
         mBaiduMap = mMapView.getMap();
@@ -62,15 +68,20 @@ public class BaiduMapActivity extends AppCompatActivity {
                 textView.post(new Runnable() {
                     @Override
                     public void run() {
-                        textView.setText(mapStatus.target.toString());
+                        clearOverlay();
+                        LatLng target = mapStatus.target;
+                        MarkerOptions ooA = new MarkerOptions().position(target).icon(mCurrentMarker).zIndex(9).draggable(true);
+                        ooA.animateType(MarkerOptions.MarkerAnimateType.drop);
+                        mBaiduMap.addOverlay(ooA);
                     }
                 });
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                });
+            }
+        });
+        mBaiduMap.setOnMarkerClickListener(new BaiduMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                setWindow(marker);
+                return true;
             }
         });
         location();
@@ -101,7 +112,6 @@ public class BaiduMapActivity extends AppCompatActivity {
         mBaiduMap.setMyLocationEnabled(true);
         MyLocationConfiguration.LocationMode mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
         // 设置定位图层的配置（定位模式，是否允许方向信息，用户自定义定位图标）
-        BitmapDescriptor mCurrentMarker = BitmapDescriptorFactory.fromResource(R.drawable.icon_gcoding);
         MyLocationConfiguration config = new MyLocationConfiguration(mCurrentMode, true, mCurrentMarker, accuracyCircleFillColor, accuracyCircleStrokeColor);
         mBaiduMap.setMyLocationConfigeration(config);
         LocationClient mLocClient = new LocationClient(getApplicationContext());
@@ -128,6 +138,31 @@ public class BaiduMapActivity extends AppCompatActivity {
         return option;
     }
 
+    private void clearOverlay() {
+        mBaiduMap.clear();
+    }
+
+    private void setWindow(final Marker marker) {
+        Button button = new Button(getApplicationContext());
+        button.setBackgroundResource(R.drawable.popup);
+        InfoWindow.OnInfoWindowClickListener listener = null;
+        button.setText("更改位置");
+        button.setBackgroundColor(0x0000f);
+        button.setWidth(300);
+
+        listener = new InfoWindow.OnInfoWindowClickListener() {
+            public void onInfoWindowClick() {
+                LatLng ll = marker.getPosition();
+                LatLng llNew = new LatLng(ll.latitude + 0.005, ll.longitude + 0.005);
+                marker.setPosition(llNew);
+                // mBaiduMap.hideInfoWindow();
+            }
+        };
+        LatLng ll = marker.getPosition();
+        InfoWindow mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, listener);
+        mBaiduMap.showInfoWindow(mInfoWindow);
+
+    }
 
     /**
      * 定位SDK监听函数
@@ -221,8 +256,6 @@ public class BaiduMapActivity extends AppCompatActivity {
             }
             return sb.toString();
         }
-
-
     }
 
 
