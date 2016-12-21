@@ -6,9 +6,6 @@ android {
     compileSdkVersion 24
     // build tools的版本
     buildToolsVersion "24.0.3"
-
-
-
     defaultConfig {
         applicationId "cn.steve.study"
         minSdkVersion 14
@@ -17,6 +14,7 @@ android {
         versionName "2.0"
         renderscriptTargetApi 23
         renderscriptSupportModeEnabled true
+        multiDexEnabled true
 
     }
     buildTypes {
@@ -29,15 +27,29 @@ android {
             buildConfigField "String", "addField", '"DefaultValue"'
         }
     }
+    signingConfigs {
+        config {
+            keyAlias 'study'
+            keyPassword 'android'
+            storeFile file('../study.keystore.jks')
+            storePassword 'android'
+        }
+        debug {
+            keyAlias 'study'
+            keyPassword 'android'
+            storeFile file('../study.keystore.jks')
+            storePassword 'android'
+        }
+    }
     lintOptions {
         abortOnError false
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(":mylib")
-    compile project(":lib_http")
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':mylib')
+    compile project(':lib_http')
     //dagger2
     apt 'com.google.dagger:dagger-compiler:2.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'

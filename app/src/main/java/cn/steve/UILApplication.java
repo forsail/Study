@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.StrictMode;
 import android.util.Log;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -70,6 +71,7 @@ public class UILApplication extends Application {
                 Log.e("UILApplication", "默认的初始化");
                 initImageLoader(getApplicationContext());
                 initRealm();
+                initBaiduMap();
             }
         }
     }
@@ -102,6 +104,11 @@ public class UILApplication extends Application {
     //print the progress info
     private void printProgressInfo() {
         Log.i("SteveApplication", Runtime.getRuntime().toString());
+    }
+
+    private void initBaiduMap() {
+        SDKInitializer.initialize(getApplicationContext());
+
     }
 
 }
