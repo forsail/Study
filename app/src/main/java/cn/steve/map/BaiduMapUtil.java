@@ -2,6 +2,7 @@ package cn.steve.map;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.support.annotation.DrawableRes;
 import android.widget.Button;
 
 import com.baidu.mapapi.map.BaiduMap;
@@ -13,6 +14,7 @@ import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
+import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
@@ -129,36 +131,37 @@ public class BaiduMapUtil {
         LatLng target = mapStatus.target; //地图操作的中心点。
         Point targetScreen = mapStatus.targetScreen; //地图操作中心点在屏幕中的坐标
         float zoom = mapStatus.zoom; //地图缩放级别 3~21
-        //MarkerOptions ooA = new MarkerOptions().position(target).icon(mCurrentMarker).zIndex(9).draggable(true);
-        //ooA.animateType(MarkerOptions.MarkerAnimateType.drop);
-        //this.mBaiduMap.addOverlay(ooA);
+        MarkerOptions ooA = new MarkerOptions().position(target).icon(mCurrentMarker).zIndex(9).draggable(true);
+        ooA.animateType(MarkerOptions.MarkerAnimateType.drop);
+        this.mBaiduMap.addOverlay(ooA);
     }
 
-
-    private void setWindow(final Marker marker) {
+    //
+    private void addInfoWindow(final Marker marker, @DrawableRes int resID, String msg) {
         Button button = new Button(context);
-        button.setBackgroundResource(R.drawable.popup);
-        InfoWindow.OnInfoWindowClickListener listener = null;
-        button.setText("更改位置");
+        button.setBackgroundResource(resID);
+        button.setText(msg);
         button.setBackgroundColor(0x0000f);
         button.setWidth(300);
 
-        listener = new InfoWindow.OnInfoWindowClickListener() {
+        InfoWindow.OnInfoWindowClickListener listener = new InfoWindow.OnInfoWindowClickListener() {
             public void onInfoWindowClick() {
                 LatLng ll = marker.getPosition();
                 LatLng llNew = new LatLng(ll.latitude + 0.005, ll.longitude + 0.005);
                 marker.setPosition(llNew);
-                // mBaiduMap.hideInfoWindow();
+                // 隐藏当前 InfoWindow
+                mBaiduMap.hideInfoWindow();
             }
         };
         LatLng ll = marker.getPosition();
-        InfoWindow mInfoWindow = new InfoWindow(BitmapDescriptorFactory.fromView(button), ll, -47, listener);
-        mBaiduMap.showInfoWindow(mInfoWindow);
+        BitmapDescriptor descriptor = BitmapDescriptorFactory.fromView(button);
+        InfoWindow mInfoWindow = new InfoWindow(descriptor, ll, -47, listener);
+        this.mBaiduMap.showInfoWindow(mInfoWindow);
     }
 
 
     public void clearOverlay() {
-        mBaiduMap.clear();
+        this.mBaiduMap.clear();
     }
 
     public void onDestroy() {

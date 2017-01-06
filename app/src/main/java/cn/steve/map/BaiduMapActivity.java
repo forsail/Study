@@ -1,5 +1,6 @@
 package cn.steve.map;
 
+import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.baidu.location.BDLocation;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.model.LatLng;
 
 import cn.steve.study.R;
 
@@ -59,8 +61,11 @@ public class BaiduMapActivity extends AppCompatActivity {
         mapUtil.setOnMapStatusChangeListener(new BaiduMapUtil.OnMapStatusChangeListener() {
             @Override
             public void onMapStatusChangeFinish(final MapStatus mapStatus) {
-                mapUtil.clearOverlay();
-                mapUtil.addOverlay(mapStatus);
+                // TODO: 2017/1/6 根据中心点，获取数据
+                LatLng target = mapStatus.target; //地图操作的中心点。
+                Point targetScreen = mapStatus.targetScreen; //地图操作中心点在屏幕中的坐标
+                float zoom = mapStatus.zoom; //地图缩放级别 3~21
+
             }
         });
 
@@ -81,6 +86,7 @@ public class BaiduMapActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        mapUtil.onPause();
     }
 }
 

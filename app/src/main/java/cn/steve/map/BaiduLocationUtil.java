@@ -51,6 +51,19 @@ public class BaiduLocationUtil {
         mLocClient.start();
     }
 
+    public void stop() {
+        if (this.mLocClient.isStarted()) {
+            this.mLocClient.stop();
+        }
+    }
+
+    public void start() {
+        if (this.mLocClient.isStarted()) {
+            return;
+        }
+        this.mLocClient.start();
+    }
+
     public void requestLocation() {
         mLocClient.requestLocation();
     }
