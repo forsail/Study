@@ -37,6 +37,10 @@
             android:theme="@style/AppTheme">
 
         <meta-data
+                android:name="ProductFlavorName"
+                android:value="${productFlavor}"/>
+
+        <meta-data
                 android:name="com.baidu.lbsapi.API_KEY"
                 android:value="mpegPto8tGulBS1ecPRfbwjuVkhd3LNC"/>
 
@@ -518,12 +522,12 @@
         </activity>
 
         <!-- ContentProvider demo -->
-        <provider
-                android:name="cn.steve.contentprovider.ConfigContentProvider"
-                android:authorities="cn.steve.config.provider"
-                android:enabled="true"
-                android:exported="true">
-        </provider>
+        <!--<provider-->
+        <!--android:name="cn.steve.contentprovider.ConfigContentProvider"-->
+        <!--android:authorities="cn.steve.config.provider"-->
+        <!--android:enabled="true"-->
+        <!--android:exported="true">-->
+        <!--</provider>-->
 
         <!-- 按钮点击效果和跳转效果 -->
         <activity android:name="cn.steve.animator.CircularAnimUtilActivity">
@@ -624,10 +628,7 @@
         <activity android:name="cn.steve.recyclerview.expandable.ExpandableRecyclerViewActivity">
         </activity>
         <activity android:name="cn.steve.map.BaiduMapActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <activity android:name="cn.steve.map.LocationDemo">
 
@@ -637,6 +638,13 @@
                 android:enabled="true"
                 android:process=":remote">
         </service>
+        <!-- 多渠道打包 -->
+        <activity android:name="cn.steve.flavors.ProductFlavorMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

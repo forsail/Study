@@ -21,10 +21,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "addField", '"addFieldReleaseDefaultValue"'
+            resValue "string", "addResString", '"addResStringReleaseDefaultValue"'
+            manifestPlaceholders = [productFlavor: "manifest_Release"]
         }
         debug {
             //为BuildConfig增加新的字段
-            buildConfigField "String", "addField", '"DefaultValue"'
+            buildConfigField "String", "addField", '"addFieldDebugDefaultValue"'
+            resValue "string", "addResString", '"addResStringDebugDefaultValue"'
+            manifestPlaceholders = [productFlavor: "manifest_Debug"]
         }
     }
     signingConfigs {
