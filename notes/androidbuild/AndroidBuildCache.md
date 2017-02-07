@@ -38,5 +38,72 @@ build 项目，或者在命令行下执行 *./gradlew assemble*,检查以下位�
 ./gradlew cleanBuildCache
 ```
 
+# Using build cache in Android Studio makes Gradle build faster
+##  为何关心 build cache?
+因为 build cache 可以加快 clean 和 build 的速度。当你执行 'gradle clean build' 或者类似的命令的时候。
+
+## How does it make the build faster?
+
+通过缓存已经分包的 libraries，这个过程是不在 Gradle 的缓存管理范围内的。无论是通过 Android studio 或者 命令行的方式执行 clean 操作，build-cache 内的包都会被保留，等到下次 build apk 的时候，被复用。可以在 build-cache 目录下查看缓存的结构。
+
+！(缓存文件夹)[https://zeroturnaround.com/wp-content/uploads/2016/12/android-studio-android-build-cache-dir.png]
+
+这是文件夹下列出的是一系列命名比较奇怪的文件和文件夹。文件大小是 0 字节的文件是用来锁定文件使用的。这个是非常必要的，因为同一个缓存文件可以被不同的项目使用。锁文件，可以防止两个项目同时对一个缓存文件进行读写操作。
+
+## Exploded aar caches
+aar 缓存以文件夹的形式展现。有两种类型的缓存，一种是 dex 缓存，一种是解压完的 aar 形式的缓存。解压完的 aar 将直接保存在对应的 output 文件夹下。比如 *220674f5fc7186b424e032744f0eeb413d469b54* 文件夹的  *input 文件* 包含以下内容：
+
+```xml
+COMMAND=PREPARE_LIBRARY
+MAVEN_COORDINATES=com.google.maps.android:android-maps-utils:aar:0.3.4
+```
+文件夹的名字是 *input file* 的 *sha1sum* 值。在这个例子里，就是 *android-maps-utils* 库。解压完的 aar 在依赖的分析过程中（若未被缓存）会被缓存。
+
+## Dexed caches
+对于分包缓存，有着和 aar 缓存相似的结构。
+
+```xml
+COMMAND=PREDEX_LIBRARY
+FILE_PATH=/Users/Sten/.android/build-cache/220674f5fc7186b424e032744f0eeb413d469b54/output/jars/classes.jar
+FILE_HASH=cf251baf39f5c5138224b67b4106eb6331abbd13
+BUILD_TOOLS_REVISION=25.0.0
+JUMBO_MODE=false
+OPTIMIZE=true
+MULTI_DEX=false
+```
+文件中的 *FILE_PATH* 指向的就是我们上面所说的文件夹。文件中包含了 *android-maps-utils* 库的分包版本。*input file*  中的键值对定义了每个缓存实体。举个例子，*build tools revision* 是 25.0.0 和 25.0.1 将会有不同的分包缓存，因为 BUILD_TOOLS_REVISION 值不同。但是对于 aar 缓存而言，则会是同一个，因为对于 aar 缓存的 *input file* 而言，command 未变，maven 地址也没有变，输入文件未变。
+
+这里的输出是一个文件，而不是一个文件夹。解压之后的文件结构如下：
+
+```shell
+73  12-06-16 16:07   META-INF/MANIFEST.MF
+       0  12-06-16 16:07   META-INF/
+   87000  12-06-16 16:07   classes.dex
+       0  12-06-16 16:07   com/
+       0  12-06-16 16:07   com/google/
+       0  12-06-16 16:07   com/google/maps/
+       0  12-06-16 16:07   com/google/maps/android/
+       0  12-06-16 16:07   com/google/maps/android/clustering/
+       0  12-06-16 16:07   com/google/maps/android/clustering/algo/
+       0  12-06-16 16:07   com/google/maps/android/clustering/view/
+       0  12-06-16 16:07   com/google/maps/android/geometry/
+       0  12-06-16 16:07   com/google/maps/android/heatmaps/
+       0  12-06-16 16:07   com/google/maps/android/projection/
+       0  12-06-16 16:07   com/google/maps/android/quadtree/
+       0  12-06-16 16:07   com/google/maps/android/ui/
+```
+如你所见，这个只是文件夹结构和 classes.dex 文件。
+
+## Multidex and API level 21
+根据 multidex  和 target API 是否高于 21 的不同组合，分包缓存的使用方式也不一样。
+
+第一种情况是，不使用分包。在这种情况下，API 级别无论是否高于 21 都无关。将会使用分包缓存，也会进行 dex 文件的 merge 操作。在 apk 文件中，我们将会看到只有一个 classes.dex 文件，这个 classes.dex 包含了所有的 application 类和 libraries。
+
+第二种情况是，minSdkVersion 低于 21 并且未启用
+
+
+
+
 # Reference
 1. (Build Cache)[http://tools.android.com/tech-docs/build-cache]
+2. (Using build cache in Android Studio makes Gradle build faster)[https://zeroturnaround.com/rebellabs/using-build-cache-in-android-studio-makes-gradle-build-faster/]
