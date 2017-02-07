@@ -39,6 +39,7 @@ build 项目，或者在命令行下执行 *./gradlew assemble*,检查以下位�
 ```
 
 # Using build cache in Android Studio makes Gradle build faster
+上半部分是官方的译文,以下是截取的另外一篇文章的,链接同样在结尾给出.
 ##  为何关心 build cache?
 因为 build cache 可以加快 clean 和 build 的速度。当你执行 'gradle clean build' 或者类似的命令的时候。
 
@@ -99,9 +100,20 @@ MULTI_DEX=false
 
 第一种情况是，不使用分包。在这种情况下，API 级别无论是否高于 21 都无关。将会使用分包缓存，也会进行 dex 文件的 merge 操作。在 apk 文件中，我们将会看到只有一个 classes.dex 文件，这个 classes.dex 包含了所有的 application 类和 libraries。
 
-第二种情况是，minSdkVersion 低于 21 并且未启用
+第二种情况是，minSdkVersion 低于 21 并且 multidex 无法使用 build cache 下的 predex libraries .这是因为兼容包里的 multidex 并不支持 predex.Gradle 插件总是将所有的 application 和 library classes 都放到一个 dex 包里.
 
+最后一种情况是使用了 multidex 并且 API 级别高于 21.在这种情况下,build-cache文件夹下的分包文件将会被直接打包进 apk 文件中.每个库都将分别拥有一个将被打包进 apk 中的 classes.dex 文件.这也是为什么 API 21 是[编译时期最佳的选择](https://developer.android.com/studio/build/multidex.html#dev-build) .
 
+## Performance measurements
+针对2015年的 iosched app 在没有 multidex 和 API 最低版本 21 下分别进行测试.打开 Gradle 守护进程,启用和禁用 build cache,分别在命令行下运行 5 次 clean,build 操作.以下是五次运行结果的中位数报告.
+
+![Clean build without build cache](https://zeroturnaround.com/wp-content/uploads/2016/12/android-build-profile-2.png)
+
+![Clean build with build cache](https://zeroturnaround.com/wp-content/uploads/2016/12/android-build-profile-1.png)
+
+从上图可以看到,编译时间很明显的从 18.7 降到了 6.5秒.从图上也可以很清晰的看到 *android:transformClassesWithDexForDebug task* 所花的时间,从 12.1 降到了 1.7 秒.节省的时间取决于项目中使用的依赖包数.
+
+如果还没尝试 Android studio 2.3 ,建议现在尝试.你将会很明显的看到节省的时间.如果你对非正式版的没有兴趣,也可以在 Android studio 2.2 和 Android Gradle plugin 2.2 上实验,通过向项目根目录下的 gradle.properties  文件中添加 *android.enableBuildCache=true* .
 
 
 # Reference
