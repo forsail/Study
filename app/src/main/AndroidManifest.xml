@@ -640,6 +640,10 @@
         </service>
         <!-- 多渠道打包 -->
         <activity android:name="cn.steve.flavors.ProductFlavorMainActivity">
+
+        </activity>
+        <!--  自定义 toast -->
+        <activity android:name="cn.steve.toast.ToastyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
