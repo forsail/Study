@@ -8,6 +8,7 @@ import android.os.StrictMode;
 import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.facebook.stetho.Stetho;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -72,6 +73,7 @@ public class UILApplication extends Application {
                 initImageLoader(getApplicationContext());
                 initRealm();
                 initBaiduMap();
+                initStetho();
             }
         }
     }
@@ -109,6 +111,10 @@ public class UILApplication extends Application {
     private void initBaiduMap() {
         SDKInitializer.initialize(getApplicationContext());
 
+    }
+
+    private void initStetho() {
+        Stetho.initializeWithDefaults(this);
     }
 
 }
