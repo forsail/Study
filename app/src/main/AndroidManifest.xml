@@ -644,6 +644,10 @@
         </activity>
         <!--  自定义 toast -->
         <activity android:name="cn.steve.toast.ToastyActivity">
+
+        </activity>
+        <!-- 官方 BottomNavigationView-->
+        <activity android:name="cn.steve.bottombar.BottomNavigationViewActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

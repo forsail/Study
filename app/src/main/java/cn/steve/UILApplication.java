@@ -72,7 +72,7 @@ public class UILApplication extends Application {
                 Log.e("UILApplication", "默认的初始化");
                 initImageLoader(getApplicationContext());
                 initRealm();
-                initBaiduMap();
+                //initBaiduMap();
                 initStetho();
             }
         }
@@ -110,7 +110,6 @@ public class UILApplication extends Application {
 
     private void initBaiduMap() {
         SDKInitializer.initialize(getApplicationContext());
-
     }
 
     private void initStetho() {
