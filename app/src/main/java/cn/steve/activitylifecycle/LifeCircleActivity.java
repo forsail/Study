@@ -1,6 +1,7 @@
 package cn.steve.activitylifecycle;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.widget.TextView;
@@ -16,8 +17,21 @@ public class LifeCircleActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("onCreate");
         setContentView(R.layout.activity_main_textview);
         textView = (TextView) findViewById(R.id.textViewMain);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("onActivityResult");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        System.out.println("onStart");
     }
 
     @Override
@@ -38,17 +52,20 @@ public class LifeCircleActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
+        System.out.println("onPause");
         s = "暂停";
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        System.out.println("onStop");
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
+        System.out.println("onRestart");
         textView.setText(s);
     }
 
