@@ -20,6 +20,10 @@ public class NameGenerateAnnotatedClass {
         packageName = annotatedClassElement.getQualifiedName().toString();
     }
 
+    public TypeElement getAnnotatedClassElement() {
+        return annotatedClassElement;
+    }
+
     public String getPackageName() {
         return packageName;
     }

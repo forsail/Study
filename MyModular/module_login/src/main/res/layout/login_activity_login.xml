@@ -16,4 +16,15 @@
             android:layout_height="match_parent"
             android:text="LoginView"
             android:id="@+id/loginTextView"/>
+
+    <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/loginTextView"
+            android:text="toMine"
+
+    />
+
+
 </RelativeLayout>

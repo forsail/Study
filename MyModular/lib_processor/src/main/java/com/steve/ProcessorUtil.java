@@ -1,8 +1,8 @@
 package com.steve;
 
 
-import com.squareup.javapoet.FieldSpec;
 import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
 
 import java.io.IOException;
@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.annotation.processing.Filer;
 import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.type.TypeMirror;
@@ -22,8 +23,7 @@ import javax.tools.Diagnostic;
 
 public class ProcessorUtil {
 
-    public static final String CLASSNAME = "RouterList";
-    public static final String PACKAGENAME = "com.lvmama.router";
+    public static final String CLASSNAME = "RouterTemp";
 
     private Messager messager;
     private Filer filer;
@@ -63,23 +63,40 @@ public class ProcessorUtil {
 
     public void generateCode() {
         TypeSpec.Builder builder = TypeSpec.classBuilder(CLASSNAME).addModifiers(Modifier.PUBLIC);
-        for (NameGenerateAnnotatedClass annotatedClass : list) {
-            FieldSpec fieldSpec = FieldSpec.builder(String.class, annotatedClass.getClassName())
-                    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                    .initializer("$S", annotatedClass.getPackageName())
-                    .build();
-            builder.addField(fieldSpec);
-        }
-        TypeSpec typeSpec = builder.build();
-        JavaFile.Builder javaFileBuilder = JavaFile.builder(PACKAGENAME, typeSpec);
-        JavaFile javaFile = javaFileBuilder.build();
-        try {
+        String PACKAGENAME;
+        if (list.size() > 0) {
+            PACKAGENAME = list.get(0).getClass().getPackage().getName();
+
+            MethodSpec.Builder mapMethod = MethodSpec
+                .methodBuilder("inject")
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL, Modifier.STATIC)
+                .addCode("\n");
+            for (NameGenerateAnnotatedClass annotatedClass : list) {
+                //FieldSpec fieldSpec = FieldSpec
+                //    .builder(String.class, annotatedClass.getClassName())
+                //    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
+                //    .initializer("$S", annotatedClass.getPackageName())
+                //    .build();
+                //builder.addField(fieldSpec);
+
+                if (annotatedClass.getAnnotatedClassElement().getKind() == ElementKind.CLASS) {
+                    mapMethod.addStatement("com.lvmama.router.RouterList.inject($S, $S)", annotatedClass.getClassName(), annotatedClass.getPackageName());
+                }
+            }
+            builder.addMethod(mapMethod.build());
+
+            TypeSpec typeSpec = builder.build();
+            JavaFile.Builder javaFileBuilder = JavaFile.builder(PACKAGENAME, typeSpec);
+            JavaFile javaFile = javaFileBuilder.build();
+            try {
 //            javaFile.writeTo(System.out); //输出到控制台
-            javaFile.writeTo(filer); //输出到默认的目录
-        } catch (IOException e) {
-            e.printStackTrace();
+                javaFile.writeTo(filer); //输出到默认的目录
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
+
 
     public void addNameGenerateAnnotatedClass(NameGenerateAnnotatedClass item) {
         list.add(item);
