@@ -1,1 +1,1 @@
-include ':app', ':module_mine', ':module_login', ':router', ':lib_processor'
+include ':app', ':module_mine', ':module_login', ':router_driver', ':lib_processor'

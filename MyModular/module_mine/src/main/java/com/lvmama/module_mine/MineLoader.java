@@ -6,6 +6,7 @@ package com.lvmama.module_mine;
 
 public class MineLoader {
 
-    static {
+    public static void init() {
+        RouterTemp.inject();
     }
 }

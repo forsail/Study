@@ -65,7 +65,7 @@ public class ProcessorUtil {
         TypeSpec.Builder builder = TypeSpec.classBuilder(CLASSNAME).addModifiers(Modifier.PUBLIC);
         String PACKAGENAME;
         if (list.size() > 0) {
-            PACKAGENAME = list.get(0).getClass().getPackage().getName();
+            PACKAGENAME = list.get(0).getPackageName();
 
             MethodSpec.Builder mapMethod = MethodSpec
                 .methodBuilder("inject")
@@ -75,12 +75,12 @@ public class ProcessorUtil {
                 //FieldSpec fieldSpec = FieldSpec
                 //    .builder(String.class, annotatedClass.getClassName())
                 //    .addModifiers(Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                //    .initializer("$S", annotatedClass.getPackageName())
+                //    .initializer("$S", annotatedClass.getFullName())
                 //    .build();
                 //builder.addField(fieldSpec);
 
                 if (annotatedClass.getAnnotatedClassElement().getKind() == ElementKind.CLASS) {
-                    mapMethod.addStatement("com.lvmama.router.RouterList.inject($S, $S)", annotatedClass.getClassName(), annotatedClass.getPackageName());
+                    mapMethod.addStatement("com.lvmama.router.RouterList.inject($S, $S)", annotatedClass.getClassName(), annotatedClass.getFullName());
                 }
             }
             builder.addMethod(mapMethod.build());

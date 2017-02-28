@@ -7,8 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.lvmama.module_login.LoginActivity;
-
 /**
  * Created by Steve on 2017/2/27.
  */
@@ -29,7 +27,7 @@ public class WelcomeActivity extends AppCompatActivity {
         this.button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
                 WelcomeActivity.this.startActivity(intent);
             }
         });

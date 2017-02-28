@@ -16,6 +16,6 @@ public class MineProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mine);
+        setContentView(R.layout.activity_mine_profile);
     }
 }
