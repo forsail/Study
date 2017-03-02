@@ -35,7 +35,7 @@ class MyWebViewClient extends WebViewClient {
         super.onPageStarted(view, url, favicon);
         view.getSettings().setBlockNetworkImage(true);
         mLoadListener.onPageStart();
-        Log.d(TAG, "onPageStarted() called with: " + "view = [" + view + "], url = [" + url+ "], favicon = [" + favicon + "]");
+        Log.d(TAG, "onPageStarted() called with: " + "view = [" + view + "], url = [" + url + "], favicon = [" + favicon + "]");
     }
 
     @Override

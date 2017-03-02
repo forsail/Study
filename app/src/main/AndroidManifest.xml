@@ -114,7 +114,7 @@
         <activity android:name="cn.steve.handler.HandlerActivity02"/>
         <!-- webview -->
         <activity android:name="cn.steve.webview.simple.WebViewActivity"/>
-        <activity android:name="cn.steve.webview.simple.WebViewTestAcitvity">
+        <activity android:name="cn.steve.webview.simple.WebViewTestActivity">
         </activity>
         <!-- broadcast -->
         <activity android:name="cn.steve.broadcast.NormalBroadCastActivity"/>

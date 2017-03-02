@@ -79,8 +79,7 @@ public class WebViewActivity extends Activity {
                 return super.shouldOverrideUrlLoading(view, url);
             }
 
-            public void onReceivedError(WebView view, int errorCode, String description,
-                                        String failingUrl) {
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 
                 // view.loadUrl("file//android_asset/error.html");
                 tv_error.setText("404000000000");

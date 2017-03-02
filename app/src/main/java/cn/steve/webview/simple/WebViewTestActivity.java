@@ -16,7 +16,7 @@ import cn.steve.study.R;
  *
  * Created by yantinggeng on 2015/12/14.
  */
-public class WebViewTestAcitvity extends AppCompatActivity {
+public class WebViewTestActivity extends AppCompatActivity {
 
     private WebView webView;
 
