@@ -5,11 +5,11 @@ ext {
             applicationId                 : "cn.steve.study",
             //最低和目标版本
             minSdkVersion                 : 14,
-            targetSdkVersion              : 23,
+            targetSdkVersion              : 25,
             // 编译SDK的版本
-            compileSdkVersion             : 23,
+            compileSdkVersion             : 25,
             // build tools的版本
-            buildToolsVersion             : "23.0.3",
+            buildToolsVersion             : "25.0.2",
             //版本号
             versionCode                   : 2,
             versionName                   : "2.0",
@@ -19,26 +19,54 @@ ext {
     ]
 
 
-    supportLibraryVersion = '23.4.0'
-    retrofitVersion = '2.0.0'
-    butterknifeVersion = '7.0.1'
-    okhttpVersion = '2.7.0'
-    leakcanaryVersion = '1.3.1'
-    glideVersion = '3.6.1'
+    def supportLibraryVersion = '25.2.0'
+    def butterknifeVersion = '7.0.1'
+    def okhttpVersion = '3.2.0'
+    def leakcanaryVersion = '1.3.1'
+    def glideVersion = '3.6.1'
+    def gsonVersion = '2.7'
+    def retrofitVersion = '2.0.0'
+    def flexlayoutVersion = '0.1.2'
+    def ageraVersion = '1.0.0-rc2'
+    def rxjavaVersion = '1.1.5'
+    def rxandroidVersion = '1.2.0'
+    def rxbindingVersion = '1.0.1'
 
     dependencies = [
             //android official libs
-            "support-v4"     : 'com.android.support:support-v4:$supportLibraryVersion',
-            "appcompat-v7"   : 'com.android.support:appcompat-v7:$supportLibraryVersion',
-            "design"         : 'com.android.support:design:$supportLibraryVersion',
-            "cardview-v7"    : 'com.android.support:cardview-v7:$supportLibraryVersion',
-            "recyclerview-v7": 'com.android.support:recyclerview-v7:$supportLibraryVersion',
+            "support-v4"               : "com.android.support:support-v4:${supportLibraryVersion}",
+            "appcompat-v7"             : "com.android.support:appcompat-v7:${supportLibraryVersion}",
+            "design"                   : "com.android.support:design:${supportLibraryVersion}",
+            "cardview-v7"              : "com.android.support:cardview-v7:${supportLibraryVersion}",
+            "recyclerview-v7"          : "com.android.support:recyclerview-v7:${supportLibraryVersion}",
+            "gridlayout"               : "com.android.support:gridlayout-v7:${supportLibraryVersion}",
+            "percent"                  : "com.android.support:percent:${supportLibraryVersion}",
+            "palette-v7"               : "com.android.support:palette-v7:${supportLibraryVersion}",
+            "annotations"              : "com.android.support:support-annotations:${supportLibraryVersion}",
+            "flexlayout"               : "com.google.android:flexbox:${flexlayoutVersion}",
+            "agera"                    : "com.google.android.agera:agera:${ageraVersion}",
+
             //square official libs
-            "butterknife"    : 'com.jakewharton:butterknife:$butterknifeVersion',
-            "okhttp"         : 'com.squareup.okhttp:okhttp:$okhttpVersion',
-            "leakcanary"     : 'com.squareup.leakcanary:leakcanary-android:$leakcanaryVersion',
+            "butterknife"              : "com.jakewharton:butterknife:${butterknifeVersion}",
+            "okhttp"                   : "com.squareup.okhttp3:okhttp:${okhttpVersion}",
+            "leakcanaryDebug"          : "com.squareup.leakcanary:leakcanary-android:${leakcanaryVersion}",
+            "leakcanaryRelease"        : "com.squareup.leakcanary:leakcanary-android-no-op:${leakcanaryVersion}",
+            "retrofit2"                : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            "retrofit2Rxjava"          : "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}",
+            "retrofit2Gson"            : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            "rxjava"                   : "io.reactivex:rxjava:${rxjavaVersion}",
+            "rxandroid"                : "io.reactivex:rxandroid:${rxandroidVersion}",
+            "rxbinding"                : "com.jakewharton.rxbinding:rxbinding:${rxbindingVersion}",
+            "rxbinding-support-v4"     : "com.jakewharton.rxbinding:rxbinding-support-v4:${rxbindingVersion}",
+            "rxbinding-appcompat-v7"   : "com.jakewharton.rxbinding:rxbinding-appcompat-v7:${rxbindingVersion}",
+            "rxbinding-design"         : "com.jakewharton.rxbinding:rxbinding-design:${rxbindingVersion}",
+            "rxbinding-recyclerview-v7": "com.jakewharton.rxbinding:rxbinding-recyclerview-v7:${rxbindingVersion}",
+
             //glide
-            "glide"          : 'com.github.bumptech.glide:glide:$glideVersion',
+            "glide"                    : "com.github.bumptech.glide:glide:${glideVersion}",
+
+            // gson
+            "gson"                     : "com.google.code.gson:gson:${gsonVersion}",
 
     ]
 }

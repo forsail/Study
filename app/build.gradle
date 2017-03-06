@@ -2,21 +2,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'realm-android'
 android {
-    // 编译SDK的版本
-    compileSdkVersion 24
-    // build tools的版本
-    buildToolsVersion "24.0.3"
-    defaultConfig {
-        applicationId "cn.steve.study"
-        minSdkVersion 14
-        targetSdkVersion 24
-        versionCode 2
-        versionName "2.0"
-        renderscriptTargetApi 23
-        renderscriptSupportModeEnabled true
-        multiDexEnabled true
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
+    defaultConfig {
+        applicationId rootProject.ext.android.applicationId
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode rootProject.ext.android.versionCode
+        versionName rootProject.ext.android.versionName
+        renderscriptTargetApi rootProject.ext.android.renderscriptTargetApi
+        renderscriptSupportModeEnabled rootProject.ext.android.renderscriptSupportModeEnabled
+        multiDexEnabled true
     }
+
     buildTypes {
         release {
             minifyEnabled false
