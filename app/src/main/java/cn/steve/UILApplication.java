@@ -1,10 +1,10 @@
 package cn.steve;
 
 import android.annotation.TargetApi;
-import android.app.Application;
 import android.content.Context;
 import android.os.Build;
 import android.os.StrictMode;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -20,7 +20,7 @@ import io.realm.RealmConfiguration;
 /**
  * @author Sergey Tarasevich (nostra13[at]gmail[dot]com)
  */
-public class UILApplication extends Application {
+public class UILApplication extends MultiDexApplication {
 
     //init the image loader params
     public static void initImageLoader(Context context) {
