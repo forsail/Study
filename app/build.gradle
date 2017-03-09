@@ -15,6 +15,15 @@ android {
         renderscriptSupportModeEnabled rootProject.ext.android.renderscriptSupportModeEnabled
         multiDexEnabled true
     }
+    productFlavors {
+        // Define separate dev and prod product flavors.
+        dev {
+            // dev utilizes minSDKVersion = 21 to allow the Android gradle plugin
+            // to pre-dex each module and produce an APK that can be tested on
+            // Android Lollipop without time consuming dex merging processes.
+            minSdkVersion 21
+        }
+    }
 
     buildTypes {
         release {
@@ -47,6 +56,11 @@ android {
     }
     lintOptions {
         abortOnError false
+    }
+    dexOptions {
+        preDexLibraries true
+        maxProcessCount 4 // this is the default value
+        javaMaxHeapSize "2g"
     }
 }
 

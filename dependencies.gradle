@@ -31,6 +31,7 @@ ext {
     def rxjavaVersion = '1.1.5'
     def rxandroidVersion = '1.2.0'
     def rxbindingVersion = '1.0.1'
+    def multidexVersion = '1.0.0'
 
     dependencies = [
             //android official libs
@@ -45,6 +46,7 @@ ext {
             "annotations"              : "com.android.support:support-annotations:${supportLibraryVersion}",
             "flexlayout"               : "com.google.android:flexbox:${flexlayoutVersion}",
             "agera"                    : "com.google.android.agera:agera:${ageraVersion}",
+            "multidex"                 : "com.android.support:multidex:${multidexVersion}",
 
             //square official libs
             "butterknife"              : "com.jakewharton:butterknife:${butterknifeVersion}",

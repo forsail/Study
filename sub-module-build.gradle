@@ -25,4 +25,9 @@ android {
         checkReleaseBuilds false
         abortOnError false
     }
+    dexOptions {
+        preDexLibraries true
+        maxProcessCount 4 // this is the default value
+        javaMaxHeapSize "2g"
+    }
 }
