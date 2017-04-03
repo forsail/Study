@@ -29,6 +29,7 @@
     <!-- 获取模拟定位信息 -->
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_GPS"/>
+
     <application
             android:name="cn.steve.UILApplication"
             android:allowBackup="true"
@@ -132,7 +133,9 @@
 
         <service android:name="cn.steve.service.MsgService"/>
 
-        <activity android:name="cn.steve.uicommunicate.UIActivity"/>
+        <activity android:name="cn.steve.uicommunicate.UIActivity">
+
+        </activity>
         <activity android:name="cn.steve.listview.cache.ListViewMainActivity"/>
         <!-- 水平循环滚动 -->
         <activity android:name="cn.steve.gallery.HorizontalScrollViewMainActivity"/>
@@ -478,7 +481,11 @@
         </activity>
 
         <!-- Handler -->
-        <activity android:name="cn.steve.handler.HandlerLooperActivity">
+        <activity android:name="cn.steve.uicommunicate.ThreadUpdateUiActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <!-- IntentService -->
@@ -633,6 +640,7 @@
         <activity android:name="cn.steve.map.LocationDemo">
 
         </activity>
+
         <service
                 android:name="com.baidu.location.f"
                 android:enabled="true"
@@ -652,10 +660,7 @@
         </activity>
         <!--task-->
         <activity android:name="cn.steve.task.TaskActivityA">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <activity android:name="cn.steve.task.TaskActivityB">
         </activity>
