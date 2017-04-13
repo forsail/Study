@@ -482,10 +482,7 @@
 
         <!-- Handler -->
         <activity android:name="cn.steve.uicommunicate.ThreadUpdateUiActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
 
         <!-- IntentService -->
@@ -660,9 +657,13 @@
         </activity>
         <!--task-->
         <activity android:name="cn.steve.task.TaskActivityA">
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
-        <activity android:name="cn.steve.task.TaskActivityB">
+        <activity android:name="cn.steve.task.TaskActivityB"
+                >
         </activity>
         <activity android:name="cn.steve.task.TaskActivityC">
         </activity>

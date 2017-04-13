@@ -34,6 +34,7 @@ public class TaskActivityA extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TaskActivityA.this, TaskActivityB.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 TaskActivityA.this.startActivity(intent);
             }
         });
