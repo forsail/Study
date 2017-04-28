@@ -657,16 +657,37 @@
         </activity>
         <!--task-->
         <activity android:name="cn.steve.task.TaskActivityA">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <activity android:name="cn.steve.task.TaskActivityB"
                 >
         </activity>
         <activity android:name="cn.steve.task.TaskActivityC">
         </activity>
+
+        <!--launchmodel and task-->
+        <activity android:name="cn.steve.task.launchmodel.LaunchModelMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:name="cn.steve.task.launchmodel.SingleInstanceActivity"
+                android:launchMode="singleInstance"
+        />
+        <activity
+                android:name="cn.steve.task.launchmodel.SingleTaskActivity"
+                android:launchMode="singleTask"
+        />
+        <activity
+                android:name="cn.steve.task.launchmodel.SingleTopActivity"
+                android:launchMode="singleTop"
+        />
+        <activity
+                android:name="cn.steve.task.launchmodel.StandardActivity"
+                android:launchMode="standard"
+        />
     </application>
 
 </manifest>
