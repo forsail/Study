@@ -430,7 +430,11 @@
                 android:theme="@style/AppNoActionBarTheme">
         </activity>
         <!-- bottom sheet -->
-        <activity android:name="cn.steve.share.BottomSheetShareActivity">
+        <activity android:name="cn.steve.share.simple.BottomSheetShareActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <!-- 打印定制的log -->
         <activity android:name="cn.steve.log.LogActivity">
@@ -667,10 +671,7 @@
 
         <!--launchmodel and task-->
         <activity android:name="cn.steve.task.launchmodel.LaunchModelMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <activity
                 android:name="cn.steve.task.launchmodel.SingleInstanceActivity"

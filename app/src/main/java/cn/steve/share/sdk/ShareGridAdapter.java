@@ -1,5 +1,5 @@
 
-package cn.steve.share;
+package cn.steve.share.sdk;
 
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;

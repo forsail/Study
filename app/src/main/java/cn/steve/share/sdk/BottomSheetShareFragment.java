@@ -1,4 +1,4 @@
-package cn.steve.share;
+package cn.steve.share.sdk;
 
 import android.app.Dialog;
 import android.os.Bundle;

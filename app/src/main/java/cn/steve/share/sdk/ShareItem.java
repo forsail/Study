@@ -1,4 +1,4 @@
-package cn.steve.share;
+package cn.steve.share.sdk;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -9,13 +9,6 @@ import android.support.annotation.DrawableRes;
  */
 public class ShareItem implements Parcelable {
 
-    public static final int WECHAT = 11;
-    public static final int WECHAT_TIMELINE = 22;
-    public static final int WECHAT_FAVOURITE = 33;
-    public static final int WEIBO = 44;
-    public static final int QQ = 55;
-    public static final int MESSAGE = 66;
-    public static final int LINK = 77;
     public static final Creator<ShareItem> CREATOR = new Creator<ShareItem>() {
         @Override
         public ShareItem createFromParcel(Parcel in) {

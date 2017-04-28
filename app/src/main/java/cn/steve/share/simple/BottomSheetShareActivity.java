@@ -1,10 +1,11 @@
-package cn.steve.share;
+package cn.steve.share.simple;
 
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import cn.steve.share.sdk.ShareUtil;
 import cn.steve.study.R;
 
 public class BottomSheetShareActivity extends AppCompatActivity {
@@ -27,6 +28,9 @@ public class BottomSheetShareActivity extends AppCompatActivity {
     private void onClickActionButton() {
         ShareUtil shareUtil = new ShareUtil(this);
         shareUtil.share();
+
+
+
     }
 
 }

@@ -1,6 +1,8 @@
-package cn.steve.share;
+package cn.steve.share.simple;
 
 import android.content.Context;
+
+import cn.steve.share.sdk.ISharePresenter;
 
 /**
  * Created by steveyan on 16-10-4.
@@ -16,37 +18,37 @@ public class SharePresenter extends ISharePresenter {
 
 
     @Override
-    void shareByQQ() {
+    public void shareByQQ() {
 
     }
 
     @Override
-    void shareByWechat() {
+    public void shareByWechat() {
 
     }
 
     @Override
-    void shareByWechatTimeLine() {
+    public void shareByWechatTimeLine() {
 
     }
 
     @Override
-    void shareByWechatFavourite() {
+    public void shareByWechatFavourite() {
 
     }
 
     @Override
-    void shareByWeibo() {
+    public void shareByWeibo() {
 
     }
 
     @Override
-    void shareByMessage() {
+    public void shareByMessage() {
 
     }
 
     @Override
-    void shareByLink() {
+    public void shareByLink() {
 
     }
 }

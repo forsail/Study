@@ -1,12 +1,13 @@
-package cn.steve.share;
+package cn.steve.share.sdk;
 
-import static cn.steve.share.ShareItem.LINK;
-import static cn.steve.share.ShareItem.MESSAGE;
-import static cn.steve.share.ShareItem.QQ;
-import static cn.steve.share.ShareItem.WECHAT;
-import static cn.steve.share.ShareItem.WECHAT_FAVOURITE;
-import static cn.steve.share.ShareItem.WECHAT_TIMELINE;
-import static cn.steve.share.ShareItem.WEIBO;
+
+import static cn.steve.share.ShareTo.LINK;
+import static cn.steve.share.ShareTo.MESSAGE;
+import static cn.steve.share.ShareTo.QQ;
+import static cn.steve.share.ShareTo.WECHAT;
+import static cn.steve.share.ShareTo.WECHAT_FAVOURITE;
+import static cn.steve.share.ShareTo.WECHAT_TIMELINE;
+import static cn.steve.share.ShareTo.WEIBO;
 
 /**
  * Created by steveyan on 16-10-4.
@@ -40,17 +41,17 @@ public abstract class ISharePresenter {
         }
     }
 
-    abstract void shareByQQ();
+    public abstract void shareByQQ();
 
-    abstract void shareByWechat();
+    public abstract void shareByWechat();
 
-    abstract void shareByWechatTimeLine();
+    public abstract void shareByWechatTimeLine();
 
-    abstract void shareByWechatFavourite();
+    public abstract void shareByWechatFavourite();
 
-    abstract void shareByWeibo();
+    public abstract void shareByWeibo();
 
-    abstract void shareByMessage();
+    public abstract void shareByMessage();
 
-    abstract void shareByLink();
+    public abstract void shareByLink();
 }

@@ -1,4 +1,4 @@
-package cn.steve.share;
+package cn.steve.share.sdk;
 
 import android.content.Context;
 import android.os.Build;
@@ -25,8 +25,7 @@ public class BottomSheetShareDialog extends AppCompatDialog {
     private BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback
         = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
-        public void onStateChanged(@NonNull View bottomSheet,
-                                   @BottomSheetBehavior.State int newState) {
+        public void onStateChanged(@NonNull View bottomSheet, @BottomSheetBehavior.State int newState) {
             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                 dismiss();
             }
