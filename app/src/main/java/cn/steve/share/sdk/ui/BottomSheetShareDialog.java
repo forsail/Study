@@ -1,4 +1,4 @@
-package cn.steve.share.sdk;
+package cn.steve.share.sdk.ui;
 
 import android.content.Context;
 import android.os.Build;

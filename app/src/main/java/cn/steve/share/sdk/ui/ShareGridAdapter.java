@@ -1,5 +1,4 @@
-
-package cn.steve.share.sdk;
+package cn.steve.share.sdk.ui;
 
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
@@ -56,13 +55,13 @@ public class ShareGridAdapter extends RecyclerView.Adapter<ShareGridAdapter.Shar
         void onClick(View view);
     }
 
-    class ShareViewHolder extends RecyclerView.ViewHolder {
+    static class ShareViewHolder extends RecyclerView.ViewHolder {
 
         public AppCompatImageView imageView;
         public AppCompatTextView textView;
         public ShareItem item;
 
-        public ShareViewHolder(View itemView) {
+        ShareViewHolder(View itemView) {
             super(itemView);
             imageView = (AppCompatImageView) itemView.findViewById(R.id.bottomSheetImageView);
             textView = (AppCompatTextView) itemView.findViewById(R.id.bottomSheetTextView);
@@ -71,7 +70,7 @@ public class ShareGridAdapter extends RecyclerView.Adapter<ShareGridAdapter.Shar
         public void setData(ShareItem item) {
             this.item = item;
             imageView.setImageResource(item.getDrawableRes());
-            textView.setText(item.getTitle());
+            textView.setText(item.getText());
         }
 
     }

@@ -1,4 +1,4 @@
-package cn.steve.share.sdk;
+package cn.steve.share.sdk.ui;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import cn.steve.bottomsheet.GridSpacingItemDecoration;
+import cn.steve.share.sdk.ISharePresenter;
 import cn.steve.study.R;
 
 /**
@@ -36,7 +37,6 @@ public class BottomSheetShareFragment extends AppCompatDialogFragment {
         if (bundle == null) {
             return;
         }
-        this.shareItems = bundle.getParcelableArrayList(SHAREITEMS);
         this.adapter = new ShareGridAdapter(this.shareItems);
     }
 

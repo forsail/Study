@@ -30,7 +30,6 @@ public class BottomSheetShareActivity extends AppCompatActivity {
         shareUtil.share();
 
 
-
     }
 
 }

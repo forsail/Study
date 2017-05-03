@@ -5,6 +5,8 @@ import android.content.Context;
 import cn.steve.share.sdk.ISharePresenter;
 
 /**
+ * 各个分享行为的具体实现
+ *
  * Created by steveyan on 16-10-4.
  */
 
@@ -16,39 +18,4 @@ public class SharePresenter extends ISharePresenter {
         this.context = context;
     }
 
-
-    @Override
-    public void shareByQQ() {
-
-    }
-
-    @Override
-    public void shareByWechat() {
-
-    }
-
-    @Override
-    public void shareByWechatTimeLine() {
-
-    }
-
-    @Override
-    public void shareByWechatFavourite() {
-
-    }
-
-    @Override
-    public void shareByWeibo() {
-
-    }
-
-    @Override
-    public void shareByMessage() {
-
-    }
-
-    @Override
-    public void shareByLink() {
-
-    }
 }

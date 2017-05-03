@@ -14,7 +14,7 @@ public class ShareData {
     private String picPath;
     private String productUrl;
 
-    public ShareData(ShareDataBuilder builder) {
+    private ShareData(ShareDataBuilder builder) {
         this.title = builder.title;
         this.content = builder.content;
         this.imageUrl = builder.imageUrl;
