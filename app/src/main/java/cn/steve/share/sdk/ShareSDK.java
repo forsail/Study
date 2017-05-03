@@ -1,8 +1,9 @@
 package cn.steve.share.sdk;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
-import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import cn.steve.share.ShareConstant;
 
@@ -14,8 +15,8 @@ import cn.steve.share.ShareConstant;
 
 public class ShareSDK {
 
-    private Activity activity;
-    private ArrayList<Integer> shareTos = new ArrayList<>();
+    private AppCompatActivity activity;
+    private Set<Integer> shareTos = new HashSet<>();
     // 通用部分
     private String title;
     private String content;
@@ -72,7 +73,7 @@ public class ShareSDK {
     private ShareCallBack copyShareCallBack;
     private ShareCallBack smsShareCallBack;
 
-    public ShareSDK(Activity activity) {
+    public ShareSDK(AppCompatActivity activity) {
         this.activity = activity;
     }
 
@@ -220,13 +221,13 @@ public class ShareSDK {
         return this;
     }
 
-    public ArrayList<Integer> getShareTos() {
+    public Set<Integer> getShareTos() {
         return shareTos;
     }
 
-    public void setShareTo(Integer shareTo) {
+    public ShareSDK setShareTo(Integer shareTo) {
         if (shareTos.contains(shareTo)) {
-            return;
+            return this;
         }
         if (shareTo == ShareConstant.ALL) {
             this.shareTos.add(ShareConstant.WECHAT);
@@ -236,9 +237,10 @@ public class ShareSDK {
             this.shareTos.add(ShareConstant.QQ);
             this.shareTos.add(ShareConstant.MESSAGE);
             this.shareTos.add(ShareConstant.LINK);
-            return;
+            return this;
         }
         this.shareTos.add(shareTo);
+        return this;
     }
 
     public String getTitle() {

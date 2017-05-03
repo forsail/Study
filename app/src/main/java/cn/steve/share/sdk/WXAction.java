@@ -20,5 +20,10 @@ public class WXAction implements ShareAction {
     @Override
     public void share(ShareData shareData, ShareCallBack shareCallBack) {
         Toast.makeText(context, shareData.getTitle(), Toast.LENGTH_SHORT).show();
+        if (shareCallBack == null) {
+            return;
+        }
+        shareCallBack.shareSuccess();
+
     }
 }

@@ -1,6 +1,7 @@
 package cn.steve.share.sdk;
 
 import android.content.Context;
+import android.widget.Toast;
 
 /**
  * Created by SteveYan on 2017/5/3.

@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 
 import cn.steve.bottomsheet.GridSpacingItemDecoration;
-import cn.steve.share.sdk.ISharePresenter;
+import cn.steve.share.sdk.ShareAction;
 import cn.steve.study.R;
 
 /**
@@ -25,10 +25,16 @@ import cn.steve.study.R;
 public class BottomSheetShareFragment extends AppCompatDialogFragment {
 
     public static final String SHAREITEMS = "SHAREITEMS";
-
     private ArrayList<ShareItem> shareItems;
     private ShareGridAdapter adapter;
-    private ISharePresenter presenter;
+
+    public BottomSheetShareFragment() {
+    }
+
+    public BottomSheetShareFragment(ArrayList<ShareItem> shareItems) {
+        super();
+        this.shareItems = shareItems;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,12 +43,13 @@ public class BottomSheetShareFragment extends AppCompatDialogFragment {
         if (bundle == null) {
             return;
         }
-        this.adapter = new ShareGridAdapter(this.shareItems);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        this.adapter = new ShareGridAdapter(this.shareItems);
+
         View view = inflater.inflate(R.layout.fragment_bottom_sheet_share, container, false);
 
         final RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.bottomSheetShareRecyclerView);
@@ -60,7 +67,12 @@ public class BottomSheetShareFragment extends AppCompatDialogFragment {
             public void onClick(View view) {
                 int itemPosition = recyclerView.getChildLayoutPosition(view);
                 ShareItem shareItem = shareItems.get(itemPosition);
-                presenter.dealOnclick(shareItem);
+                ShareAction action = shareItem.getAction();
+                if (action == null) {
+                    return;
+                }
+                action.share(shareItem.getShareData(), shareItem.getShareCallBack());
+                BottomSheetShareFragment.this.dismiss();
             }
         });
 
@@ -72,10 +84,6 @@ public class BottomSheetShareFragment extends AppCompatDialogFragment {
         });
 
         return view;
-    }
-
-    public void setPresenter(ISharePresenter presenter) {
-        this.presenter = presenter;
     }
 
 

@@ -1,10 +1,11 @@
 package cn.steve.share.sdk;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
 import cn.steve.share.ShareConstant;
+import cn.steve.share.sdk.ui.BottomSheetShareFragment;
 import cn.steve.share.sdk.ui.ShareItem;
 import cn.steve.study.R;
 
@@ -16,10 +17,10 @@ import cn.steve.study.R;
 
 public class ShareUtil {
 
-    private Activity context;
+    private AppCompatActivity context;
     private ArrayList<ShareItem> items = new ArrayList<>();
 
-    public ShareUtil(Activity context) {
+    public ShareUtil(AppCompatActivity context) {
         this.context = context;
     }
 
@@ -56,7 +57,8 @@ public class ShareUtil {
                     break;
             }
         }
-        // TODO: 2017/5/3 直接展示分享
+        BottomSheetShareFragment fragment = new BottomSheetShareFragment(items);
+        fragment.show(context.getSupportFragmentManager(), "shareFragment");
     }
 
 
