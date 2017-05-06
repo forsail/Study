@@ -71,22 +71,29 @@ Binder存在于系统以下几个部分中：
 
 - 应用程序进程：分别位于 Server 进程和 Client 进程中
 - Binder 驱动：分别管理为 Server 端的 Binder 实体和 Client 端的引用
-- 传输数据：由于Binder可以跨进程传递，需要在传输数据中予以表述
+- 传输数据：由于 Binder 可以跨进程传递，需要在传输数据中予以表述
 
 ## 在应用程序中的表述
 
-Binder 本质上只是一种底层通信方式，和具体服务没有关系。为了提供具体服务，Server 必须提供一套接口函数以便 Client 通过远程访问使用各种服务。这时通常采用 Proxy 设计模式：将接口函数定义在一个抽象类中，Server 和 Client 都会以该抽象类为基类实现所有接口函数，所不同的是 Server 端是真正的功能实现，而 Client 端是对这些函数远程调用请求的包装。如何将 Binder 和 Proxy 设计模式结合起来是应用程序实现面向对象 Binder 通信的根本问题。
+Binder 本质上只是一种**底层通信方式**，和具体服务没有关系。为了提供具体服务，Server 必须提供一套接口函数以便 Client 通过远程访问使用各种服务。这时通常采用 Proxy 设计模式： 将接口函数定义在一个抽象类中， Server 和 Client 都会以该抽象类为基类实现所有接口函数，所不同的是 Server 端是真正的功能实现，而 Client 端是对这些函数远程调用请求的包装。如何将 Binder 和 Proxy 设计模式结合起来是应用程序实现面向对象 Binder 通信的根本问题。
+
+### 在 Server 端的表述 – Binder实体
+
+- 作为代理模式的基础,需要一个抽象接口封装 Server 所有功能,其中包含一些列抽象函数,留待 Server 和代理各自实现.
+- 由于函数需要跨进程调用,需要为其一一编号,从而 Server 可以根据收到的编号决定调用哪个函数.
+- Binder ,Server 端定义另一个 Binder 抽象类处理来自 Client 的 Binder 请求数据包,其中最重要的成员是抽象函数 onTransact . 该函数分析收到的数据包,调用响应的接口处理请求.
+
+在 server 中以继承的方式,构建 Binder 的实体,实现所有的抽象函数,最重要的是 onTransact 函数,这个函数的输入是来自于 client 的 binder_transaction_data 结构的数据包。有个成员是 code ,包含了这次请求的接口函数编号.onTransact 将 case-by-case 地解析 code 值,从数据包取出函数参数,调用接口类中定义的函数(已被server 端实现).函数执行结束,如该需要返回值,就再构建一个 binder_transaction_data 包将返回数据包填入其中.
+
+> 那么各个 Binder 实体的 onTransact 又是什么时候调用呢？这就需要驱动参与了。前面说过，Binder 实体须要以 Binder 传输结构 flat_binder_object 形式发送给其它进程才能建立 Binder 通信，而 Binder 实体指针就存放在该结构的 handle 域中。驱动根据 Binder 位置数组从传输数据中获取该 Binder 的传输结构，为它创建位于**内核中的 Binder 节点**，将 **Binder 实体指针**记录在该节点中。如果接下来有其它进程向该 Binder 发送数据，驱动会根据节点中记录的信息将 Binder 实体指针填入 binder_transaction_data 的 target.ptr 中返回给接收线程。接收线程从数据包中取出该指针， reinterpret_cast 成 Binder 抽象类并调用 onTransact() 函数。由于这是个虚函数，不同的 Binder 实体中有各自的实现，从而可以调用到不同 Binder 实体提供的 onTransact()。
+
+### 在Client端的表述 – Binder引用
+client 端的 binder 同样需要继承 server 提供的公共接口类,并实现公共函数.但这不是真正的实现,而是对远程函数调用的包装.将函数参数打包,通过 binder 向 server 发送申请并等待返回值.为此 client 端的 binder 还需要知道 binder 实体的相关系,即对 binder 实体的引用.
+
+>由于继承了同样的公共接口类，Client Binder提供了与Server Binder一样的函数原型，使用户感觉不出Server是运行在本地还是远端。Client Binder中，公共接口函数的包装方式是：创建一个binder_transaction_data数据包，将其对应的编码填入code域，将调用该函数所需的参数填入data.buffer指向的缓存中，并指明数据包的目的地，那就是已经获得的对Binder实体的引用，填入数据包的target.handle中。注意这里和Server的区别：实际上target域是个联合体，包括ptr和handle两个成员，前者用于接收数据包的Server，指向 Binder实体对应的内存空间；后者用于作为请求方的Client，存放Binder实体的引用，告知驱动数据包将路由给哪个实体。数据包准备好后，通过驱动接口发送出去。经过BC_TRANSACTION/BC_REPLY回合完成函数的远程调用并得到返回值。
 
 
-## 在Server端的表述 – Binder实体
-
-
-
-
-## 在Client端的表述 – Binder引用
-
-
-
+## Binder 在传输数据中的表述
 ## Binder 在驱动中的表述
 
 
