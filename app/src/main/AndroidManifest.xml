@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
           package="cn.steve.study">
 
     <!-- 添加读取sd卡的权限 -->
@@ -35,7 +36,8 @@
             android:allowBackup="true"
             android:icon="@drawable/app"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            tools:replace="android:allowBackup">
 
         <meta-data
                 android:name="ProductFlavorName"
@@ -664,7 +666,7 @@
 
         </activity>
         <activity android:name="cn.steve.task.TaskActivityB"
-                >
+        >
         </activity>
         <activity android:name="cn.steve.task.TaskActivityC">
         </activity>
