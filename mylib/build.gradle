@@ -3,19 +3,18 @@ apply from: rootProject.file('sub-module-build.gradle')
 android {
     defaultConfig {
         // 个推测试账号配置
-        manifestPlaceholders.putAll([
+        manifestPlaceholders = [
+                SteveValue      : "SteveValue",
                 GETUI_APP_ID    : "GETUI_APP_ID",
                 GETUI_APP_KEY   : "GETUI_APP_KEY",
                 GETUI_APP_SECRET: "GETUI_APP_SECRET",
                 PACKAGE_NAME    : rootProject.ext.android.applicationId
-        ])
+        ]
     }
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 //    compile(name:'weiboSDK-3.1.1',ext:'aar')
-    compile(name: 'getuisdks-2.9.0.0', ext: 'aar')
-
     // official
     compile rootProject.ext.dependencies['appcompat-v7']
     compile rootProject.ext.dependencies['recyclerview-v7']
@@ -26,6 +25,8 @@ dependencies {
     compile rootProject.ext.dependencies['palette-v7']
     compile rootProject.ext.dependencies['annotations']
     compile rootProject.ext.dependencies['multidex']
+
+    compile project(':aarmodule')
 
     //google agera
     compile rootProject.ext.dependencies['agera']

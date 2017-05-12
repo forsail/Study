@@ -1,0 +1,12 @@
+<manifest
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        package="com.steve.aarmodule">
+
+    <application>
+        <meta-data
+                android:name="Steve"
+                android:value="${SteveValue}"
+        />
+    </application>
+
+</manifest>
