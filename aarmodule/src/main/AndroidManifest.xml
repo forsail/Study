@@ -6,7 +6,7 @@
         <meta-data
                 android:name="Steve"
                 android:value="${SteveValue}"
-        />
+                />
     </application>
 
 </manifest>

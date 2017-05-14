@@ -1,0 +1,22 @@
+// 对于一些 library,依赖的是它的 release 包,所以,可以禁止掉 debug 任务
+
+def disableDebugBuild(){
+	def targetTasks = project.tasks.findAll{
+		task ->
+			task.name.contains("Debug")
+	}
+	targetTasks.each{
+		println "禁用 debug 任务 : ${it.name}"
+		it.setEnabled false
+}
+}
+
+
+// 在 project 创建完所有任务的有向图后,通过文件中加上 project.afterEvaluate 设置回调,调用 disableDebugBuild 函数
+
+// 设置到 extra 属性中去,加载 utils.gradle 的 Project 就能调用此文件中定义的函数了
+
+ext{
+disableDebugBuild = this.&disableDebugBuild
+
+}

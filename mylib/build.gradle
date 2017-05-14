@@ -11,6 +11,7 @@ android {
                 PACKAGE_NAME    : rootProject.ext.android.applicationId
         ]
     }
+
 }
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
