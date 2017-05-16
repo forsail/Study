@@ -90,29 +90,54 @@ Binder 本质上只是一种**底层通信方式**，和具体服务没有关系
 ### 在Client端的表述 – Binder引用
 client 端的 binder 同样需要继承 server 提供的公共接口类,并实现公共函数.但这不是真正的实现,而是对远程函数调用的包装.将函数参数打包,通过 binder 向 server 发送申请并等待返回值.为此 client 端的 binder 还需要知道 binder 实体的相关系,即对 binder 实体的引用.
 
->由于继承了同样的公共接口类，Client Binder提供了与Server Binder一样的函数原型，使用户感觉不出Server是运行在本地还是远端。Client Binder中，公共接口函数的包装方式是：创建一个binder_transaction_data数据包，将其对应的编码填入code域，将调用该函数所需的参数填入data.buffer指向的缓存中，并指明数据包的目的地，那就是已经获得的对Binder实体的引用，填入数据包的target.handle中。注意这里和Server的区别：实际上target域是个联合体，包括ptr和handle两个成员，前者用于接收数据包的Server，指向 Binder实体对应的内存空间；后者用于作为请求方的Client，存放Binder实体的引用，告知驱动数据包将路由给哪个实体。数据包准备好后，通过驱动接口发送出去。经过BC_TRANSACTION/BC_REPLY回合完成函数的远程调用并得到返回值。
+>由于继承了同样的公共接口类，Client Binder 提供了与 Server Binder 一样的函数原型，使用户感觉不出 Server 是运行在本地还是远端。Client Binder中，公共接口函数的包装方式是：创建一个 binder_transaction_data 数据包，将其对应的编码填入 code 域，将调用该函数所需的参数填入 data.buffer 指向的缓存中，并指明数据包的目的地，那就是已经获得的对 Binder 实体的引用，填入数据包的 target.handle 中。注意这里和 Server 的区别：实际上 target 域是个联合体，包括 ptr 和 handle 两个成员，前者用于接收数据包的 Server，指向 Binder 实体对应的**内存空间**；后者用于作为请求方的 Client，存放 Binder 实体的**引用**，告知驱动数据包将路由给哪个实体。数据包准备好后，通过驱动接口发送出去。经过 BC_TRANSACTION/BC_REPLY 回合完成函数的远程调用并得到返回值。
 
 
 ## Binder 在传输数据中的表述
+
+Binder 可以塞在数据包的有效数据中越进程边界从一个进程传递给另一个进程，这些传输中的 Binder 用结构 flat_binder_object 表示.
+无论是 Binder 实体还是对实体的引用都从属与某个进程，所以该结构不能透明地在进程之间传输，必须经过驱动翻译.
+
+### flat_binder_object 成员
+
+- type: 表明该 Binder 的类型: Binder 实体;Binder 的引用;文件形式的 Binder.
+- flags: 该域只对第一次传递 Binder 实体时有效，因为此刻驱动需要在内核中创建相应的实体节点，有些参数需要从该域取出：处理本实体请求数据包的线程的最低优先级。表示该实体是否可以接收其它进程发过来的文件形式的 Binder .
+- union {void *binder; signed long handle;} : 当传递的是 Binder 实体时使用 binder 域，指向 Binder 实体在应用程序中的地址。当传递的是 Binder 引用时使用 handle 域，存放 Binder 在进程中的引用号。
+- cookie : 该域只对 Binder 实体有效，存放与该 Binder 有关的附加信息。
+
+### 文件形式的 binder 
+
+除了通常意义上用来通信的 Binder ，还有一种特殊的 Binder ：文件 Binder 。这种 Binder 的基本思想是：将文件看成 Binder 实体，进程打开的文件号看成 Binder 的引用。一个进程可以将它打开文件的文件号传递给另一个进程，从而另一个进程也打开了同一个文件，就象 Binder 的引用在进程之间传递一样。
+
+
+>一个进程打开一个文件，就获得与该文件绑定的打开文件号。从Binder的角度，linux在内核创建的打开文件描述结构struct file是Binder的实体，打开文件号是该进程对该实体的引用。既然是Binder那么就可以在进程之间传递，故也可以用flat_binder_object结构将文件Binder通过数据包发送至其它进程，只是结构中type域的值为BINDER_TYPE_FD，表明该Binder是文件Binder。
+而结构中的handle域则存放文件在发送方进程中的打开文件号。我们知道打开文件号是个局限于某个进程的值，一旦跨进程就没有意义了。这一点和Binder实体用户指针或Binder引用号是一样的，若要跨进程同样需要驱动做转换。驱动在接收Binder的进程空间创建一个新的打开文件号，将它与已有的打开文件描述结构struct file勾连上，从此该Binder实体又多了一个引用。新建的打开文件号覆盖flat_binder_object中原来的文件号交给接收进程。接收进程利用它可以执行read()，write()等文件操作
+
+
 ## Binder 在驱动中的表述
 
+驱动是 Binder 通信的核心.
+- 系统中所有的 Binder 实体以及每个实体在各个进程中的引用都登记在驱动中；
+- 驱动需要记录 Binder 引用->实体之间多对一的关系；
+- 为引用找到对应的实体；在某个进程中为实体创建或查找到对应的引用；
+- 记录 Binder 的归属地（位于哪个进程中）；
+- 通过管理 Binder 的强/弱引用创建/销毁 Binder 实体等等。
+
+为了实现实名Binder的注册，系统必须创建第一只鸡–为 SMgr 创建的，用于注册实名 Binder 的 Binder 实体，负责实名 Binder 注册过程中的进程间通信。既然创建了实体就要有对应的引用：驱动将所有进程中的 0 号引用都预留给该 Binder 实体，即所有进程的 0 号引用天然地都指向**注册实名Binder专用的Binder**，无须特殊操作即可以使用 0 号引用来注册实名 Binder。接下来随着应用程序不断地注册实名 Binder ，不断向 SMgr 索要 Binder 的引用，不断将 Binder 从一个进程传递给另一个进程，越来越多的 Binder 以传输结构 - flat_binder_object的形式穿越驱动做跨进程的迁徙。由于 binder_transaction_data 中 data.offset 数组的存在，所有流经驱动的 Binder 都逃不过驱动的眼睛。Binder 将对这些穿越进程边界的 Binder 做如下操作：检查传输结构的 type 域，如果是 BINDER_TYPE_BINDER 或 BINDER_TYPE_WEAK_BINDER 则创建 Binder 的实体；如果是 BINDER_TYPE_HANDLE 或BINDER_TYPE_WEAK_HANDLE 则创建 Binder 的引用；如果是 BINDER_TYPE_HANDLE 则为进程打开文件，无须创建任何数据结构。随着越来越多的 Binder 实体或引用在进程间传递，驱动会在内核里创建越来越多的节点或引用，当然这个过程对用户来说是透明的。
+
+### Binder 实体在驱动中的表述
+驱动中的 Binder 实体也叫‘节点’，隶属于提供实体的进程，由 struct binder_node 结构来表示.
+
+union {struct rb_node rb_node;struct hlist_node dead_node;}: 每个进程都维护一棵红黑树，以 Binder 实体在用户空间的指针，即本结构的 ptr 成员为索引存放该进程所有的 Binder 实体。这样驱动可以根据 Binder 实体在用户空间的指针很快找到其位于内核的节点。rb_node 用于将本节点链入该红黑树中。
+
+
+>每个进程都有一棵红黑树用于存放创建好的节点，以 Binder 在用户空间的指针作为索引。每当在传输数据中侦测到一个代表 Binder 实体的 flat_binder_object ，先以该结构的 binder指针 为索引搜索红黑树；如果没找到就创建一个新节点添加到树中。由于对于同一个进程来说内存地址是唯一的，所以不会重复建设造成混乱。
 
 
 
+### Binder 引用在驱动中的表述
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+Binder的引用也是驱动根据传输数据中的flat_binder_object创建的，隶属于获得该引用的进程，用struct binder_ref结构体表示：
 
 
 # Binder 通信模型和 Binder 通信协议，了解 Binder 的设计需求
