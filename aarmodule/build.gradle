@@ -9,6 +9,10 @@ android {
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        // 个推测试账号配置
+        manifestPlaceholders = [
+                SteveValue      : "SteveValue"
+        ]
     }
     buildTypes {
         release {
