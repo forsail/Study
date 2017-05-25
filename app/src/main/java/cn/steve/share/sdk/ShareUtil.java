@@ -3,8 +3,9 @@ package cn.steve.share.sdk;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 
-import cn.steve.share.ShareConstant;
+import cn.steve.share.ShareWhich;
 import cn.steve.share.sdk.ui.BottomSheetShareFragment;
 import cn.steve.share.sdk.ui.ShareItem;
 import cn.steve.study.R;
@@ -30,29 +31,30 @@ public class ShareUtil {
      * @param config 配置文件
      */
     public void generate(ShareSDK config) {
-        for (Integer integer : config.getShareTos()) {
+        EnumSet<ShareWhich> shareTos = config.getShareTos();
+        for (ShareWhich integer : shareTos) {
             switch (integer) {
-                case ShareConstant.ALL:
+                case ALL:
                     break;
-                case ShareConstant.QQ:
+                case QQ:
                     items.add(qq(config));
                     break;
-                case ShareConstant.WECHAT:
+                case WECHAT:
                     items.add(weChat(config));
                     break;
-                case ShareConstant.WECHAT_FAVOURITE:
+                case WECHAT_FAVOURITE:
                     items.add(favourite(config));
                     break;
-                case ShareConstant.WECHAT_TIMELINE:
+                case WECHAT_TIMELINE:
                     items.add(timeLine(config));
                     break;
-                case ShareConstant.WEIBO:
+                case WEIBO:
                     items.add(sinaWeibo(config));
                     break;
-                case ShareConstant.MESSAGE:
+                case MESSAGE:
                     items.add(sms(config));
                     break;
-                case ShareConstant.LINK:
+                case LINK:
                     items.add(copyLink(config));
                     break;
             }
@@ -64,7 +66,7 @@ public class ShareUtil {
 
     private ShareItem copyLink(ShareSDK config) {
         ShareItem item = new ShareItem(R.drawable.share_copylink, "复制链接");
-        item.setType(ShareConstant.LINK);
+        item.setType(ShareWhich.LINK);
         ShareData shareData = new ShareData.ShareDataBuilder()
             .setTitle(config.getCopyTitle())
             .setContent(config.getCopyContent())
@@ -80,7 +82,7 @@ public class ShareUtil {
 
     private ShareItem sms(ShareSDK config) {
         ShareItem item = new ShareItem(R.drawable.share_sms, "短信");
-        item.setType(ShareConstant.MESSAGE);
+        item.setType(ShareWhich.MESSAGE);
         ShareData shareData = new ShareData.ShareDataBuilder()
             .setTitle(config.getSmsTitle())
             .setContent(config.getSmsContent())
@@ -96,7 +98,7 @@ public class ShareUtil {
 
     private ShareItem sinaWeibo(ShareSDK config) {
         ShareItem item = new ShareItem(R.drawable.share_sina, "新浪微博");
-        item.setType(ShareConstant.WEIBO);
+        item.setType(ShareWhich.WEIBO);
         ShareData shareData = new ShareData.ShareDataBuilder()
             .setTitle(config.getWeiboTitle())
             .setContent(config.getWeiboContent())
@@ -112,7 +114,7 @@ public class ShareUtil {
 
     private ShareItem favourite(ShareSDK config) {
         ShareItem item = new ShareItem(R.drawable.share_wx_favourite, "微信收藏");
-        item.setType(ShareConstant.WECHAT_FAVOURITE);
+        item.setType(ShareWhich.WECHAT_FAVOURITE);
         ShareData shareData = new ShareData.ShareDataBuilder()
             .setTitle(config.getWxFavoriteTitle())
             .setContent(config.getWxFavoriteContent())
@@ -128,7 +130,7 @@ public class ShareUtil {
 
     private ShareItem timeLine(ShareSDK config) {
         ShareItem item = new ShareItem(R.drawable.share_wx_timeline, "微信朋友圈");
-        item.setType(ShareConstant.WECHAT_TIMELINE);
+        item.setType(ShareWhich.WECHAT_TIMELINE);
         ShareData shareData = new ShareData.ShareDataBuilder()
             .setTitle(config.getWxTimeLineTitle())
             .setContent(config.getWxTimeLineContent())
@@ -144,7 +146,7 @@ public class ShareUtil {
 
     private ShareItem weChat(ShareSDK config) {
         ShareItem item = new ShareItem(R.drawable.share_wx_friend, "微信好友");
-        item.setType(ShareConstant.WECHAT);
+        item.setType(ShareWhich.WECHAT);
         ShareData shareData = new ShareData.ShareDataBuilder()
             .setTitle(config.getWxSessionTitle())
             .setContent(config.getWxSessionContent())
@@ -161,7 +163,7 @@ public class ShareUtil {
 
     private ShareItem qq(ShareSDK config) {
         ShareItem item = new ShareItem(R.drawable.share_qq, "QQ");
-        item.setType(ShareConstant.QQ);
+        item.setType(ShareWhich.QQ);
         ShareData shareData = new ShareData.ShareDataBuilder()
             .setTitle(config.getQqTitle())
             .setContent(config.getQqContent())

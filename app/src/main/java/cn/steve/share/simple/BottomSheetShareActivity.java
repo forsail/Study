@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import cn.steve.share.ShareConstant;
+import cn.steve.share.ShareWhich;
 import cn.steve.share.sdk.ShareCallBack;
 import cn.steve.share.sdk.ShareSDK;
 import cn.steve.study.R;
@@ -56,10 +56,10 @@ public class BottomSheetShareActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "QQ FAILED", Toast.LENGTH_SHORT).show();
                 }
             })
-            .setShareTo(ShareConstant.WECHAT)
-            .setShareTo(ShareConstant.WECHAT_FAVOURITE)
-            .setShareTo(ShareConstant.WECHAT_TIMELINE)
-            .setShareTo(ShareConstant.QQ)
+            .setShareTo(ShareWhich.WECHAT)
+            .setShareTo(ShareWhich.WECHAT_FAVOURITE)
+            .setShareTo(ShareWhich.WECHAT_TIMELINE)
+            .setShareTo(ShareWhich.QQ)
             .startShare()
         ;
 

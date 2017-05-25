@@ -2,6 +2,7 @@ package cn.steve.share.sdk.ui;
 
 import android.support.annotation.DrawableRes;
 
+import cn.steve.share.ShareWhich;
 import cn.steve.share.sdk.ShareAction;
 import cn.steve.share.sdk.ShareCallBack;
 import cn.steve.share.sdk.ShareData;
@@ -13,7 +14,7 @@ public class ShareItem {
 
     @DrawableRes
     private int drawableRes;
-    private int type;
+    private ShareWhich type;
     private String text;
 
     private ShareAction action;
@@ -50,11 +51,11 @@ public class ShareItem {
         this.action = action;
     }
 
-    public int getType() {
+    public ShareWhich getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(ShareWhich type) {
         this.type = type;
     }
 

@@ -2,10 +2,9 @@ package cn.steve.share.sdk;
 
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.EnumSet;
 
-import cn.steve.share.ShareConstant;
+import cn.steve.share.ShareWhich;
 
 /**
  * 分享对外提供的 API
@@ -16,7 +15,7 @@ import cn.steve.share.ShareConstant;
 public class ShareSDK {
 
     private AppCompatActivity activity;
-    private Set<Integer> shareTos = new HashSet<>();
+    private EnumSet<ShareWhich> shareTos = EnumSet.noneOf(ShareWhich.class);
     // 通用部分
     private String title;
     private String content;
@@ -221,22 +220,22 @@ public class ShareSDK {
         return this;
     }
 
-    public Set<Integer> getShareTos() {
+    public EnumSet<ShareWhich> getShareTos() {
         return shareTos;
     }
 
-    public ShareSDK setShareTo(Integer shareTo) {
+    public ShareSDK setShareTo(ShareWhich shareTo) {
         if (shareTos.contains(shareTo)) {
             return this;
         }
-        if (shareTo == ShareConstant.ALL) {
-            this.shareTos.add(ShareConstant.WECHAT);
-            this.shareTos.add(ShareConstant.WECHAT_TIMELINE);
-            this.shareTos.add(ShareConstant.WECHAT_FAVOURITE);
-            this.shareTos.add(ShareConstant.WEIBO);
-            this.shareTos.add(ShareConstant.QQ);
-            this.shareTos.add(ShareConstant.MESSAGE);
-            this.shareTos.add(ShareConstant.LINK);
+        if (shareTo == ShareWhich.ALL) {
+            this.shareTos.add(ShareWhich.WECHAT);
+            this.shareTos.add(ShareWhich.WECHAT_TIMELINE);
+            this.shareTos.add(ShareWhich.WECHAT_FAVOURITE);
+            this.shareTos.add(ShareWhich.WEIBO);
+            this.shareTos.add(ShareWhich.QQ);
+            this.shareTos.add(ShareWhich.MESSAGE);
+            this.shareTos.add(ShareWhich.LINK);
             return this;
         }
         this.shareTos.add(shareTo);
