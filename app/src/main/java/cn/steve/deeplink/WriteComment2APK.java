@@ -14,9 +14,15 @@ import java.util.zip.ZipFile;
  * 这个部分是在服务器端执行的
  *
  * Created by yantinggeng on 2016/5/20.
+ *
  */
 public class WriteComment2APK {
 
+    /**
+     * 向 apk 文件写入信息
+     * @param file apk 的路径
+     * @param comment 写入的内容
+     */
     public static void writeApk(File file, String comment) {
         ZipFile zipFile = null;
         ByteArrayOutputStream outputStream = null;
