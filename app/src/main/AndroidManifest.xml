@@ -116,7 +116,12 @@
         <activity android:name="cn.steve.handler.HandlerActivity"/>
         <activity android:name="cn.steve.handler.HandlerActivity02"/>
         <!-- webview -->
-        <activity android:name="cn.steve.webview.simple.WebViewActivity"/>
+        <activity android:name="cn.steve.webview.simple.WebViewActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <activity android:name="cn.steve.webview.simple.WebViewTestActivity">
         </activity>
         <!-- broadcast -->
@@ -434,10 +439,7 @@
         <!-- bottom sheet -->
         <activity android:name="cn.steve.share.simple.BottomSheetShareActivity"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <!-- 打印定制的log -->
         <activity android:name="cn.steve.log.LogActivity">

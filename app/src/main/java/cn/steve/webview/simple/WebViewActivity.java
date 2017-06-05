@@ -41,8 +41,6 @@ public class WebViewActivity extends Activity {
             CookieSyncManager.getInstance().sync();
             mWebView.loadUrl(url);
         }
-
-        ;
     };
 
     @SuppressLint("JavascriptInterface")
@@ -73,7 +71,7 @@ public class WebViewActivity extends Activity {
 
         //当设置了自定义的WebViewClient之后，就表示不回去调用系统的浏览器
         mWebView.setWebViewClient(new WebViewClient() {
-            @Override
+
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 view.loadUrl(url);
                 return super.shouldOverrideUrlLoading(view, url);
@@ -106,6 +104,14 @@ public class WebViewActivity extends Activity {
 
     class MyListener implements View.OnClickListener {
 
+        private void sendSdkResponse(Activity activity) {
+            Bundle bundle = activity.getIntent().getExtras();
+            if (bundle != null) {
+                Intent intent = new Intent(activity, WebViewTestActivity.class);
+                activity.startActivityForResult(intent, 765);
+            }
+        }
+
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
@@ -113,6 +119,12 @@ public class WebViewActivity extends Activity {
                     mWebView.reload();
                     break;
                 case R.id.back:
+                    mWebView.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            sendSdkResponse(WebViewActivity.this);
+                        }
+                    }, 2000);
                     WebViewActivity.this.finish();
                     break;
             }
