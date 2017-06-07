@@ -81,3 +81,110 @@ ServiceManagerProxy中的getService()等成员函数，仅仅是把语义整理�
 
 
 日后，当应用调用getService()获取系统服务的代理接口时，SMS就会搜索这张“服务向量表”，查找是否有节点能和用户传来的服务名匹配，如果能查到，就返回对应的sp<IBinder>，这个接口在远端对应的实体就是“目标Service实体”。
+
+
+
+## Service Manager Service的主程序（C++层）
+在代码中，一开始就打开了binder驱动，然后调用binder_become_context_manager() 让自己成为整个系统中唯一的上下文管理器，其实也就是service管理器啦。接着main()函数调用binder_loop()进入无限循环，不断监听并解析binder驱动发来的命令。
+
+###　binder_open()
+
+Service Manager Service必须先调用binder_open()来打开binder驱动，驱动文件为“/dev/binder”。
+
+binder_open()的参数mapsize表示它希望**把binder驱动文件的多少字节映射到本地空间**。可以看到，Service Manager Service和普通进程所映射的binder大小并不相同。它把binder驱动文件的128K字节映射到内存空间，而普通进程则会映射binder文件里的BINDER_VM_SIZE（即1M减去8K）字节。
+具体的映射动作由mmap()一句完成，该函数将binder驱动文件的一部分映射到进程空间。
+
+```c
+void* mmap ( void * addr , size_t len , int prot , int flags , int fd , off_t offset );
+```
+该函数会把“参数fd所指代的文件”中的一部分映射到进程空间去。这部分文件内容以offset为起始位置，以len为字节长度。其中，参数offset表明从文件起始处开始算起的偏移量。参数prot表明对这段映射空间的访问权限，可以是PROT_READ（可读）、PROT_WRITE （可写）、PROT_EXEC （可执行）、PROT_NONE（不可访问）。参数addr用于指出文件应被映射到进程空间的起始地址，一般指定为空指针，此时会由内核来决定起始地址。
+
+binder_open()的返回值类型为binder_state*，里面记录着刚刚打开的binder驱动文件句柄以及mmap()映射到的最终目标地址。
+
+以后，SMS会不断读取这段映射空间，并做出相应的动作。
+
+
+### binder_become_context_manager()
+
+binder_become_context_manager()的作用是让当前进程成为整个系统中唯一的上下文管理器，即service管理器。仅仅是把BINDER_SET_CONTEXT_MGR 发送到 binder驱动 而已。为整个系统的上下文管理器专门生成一个binder_node节点，并记入静态变量binder_context_mgr_node。
+
+
+> 我们在这里多说两句，一般情况下，应用层的每个binder实体都会在binder驱动层对应一个binder_node节点，然而binder_context_mgr_node比较特殊，它没有对应的应用层binder实体。在整个系统里，它是如此特殊，以至于系统规定，任何应用都必须使用句柄0来跨进程地访问它。现在大家可以回想一下前文在获取SMS接口时说到的那句new BpBinder(0)，是不是能加深一点儿理解。
+
+
+### binder_loop()
+binder_loop()会先向binder驱动发出了BC_ENTER_LOOPER命令，接着进入一个for循环不断调用ioctl()读取发来的数据，接着解析这些数据。
+
+#### BC_ENTER_LOOPER
+binder_loop() 中发出 BC_ENTER_LOOPER 命令的目的，是为了告诉 binder驱动 “本线程要进入循环状态了”。在 binder驱动 中，凡是用到跨进程通信机制的线程，都会对应一个 binder_thread 节点。这里的 BC_ENTER_LOOPER 命令会导致这个节点的 looper 状态发生变化。
+
+
+#### binder_parse()
+binder_parse()负责解析从binder驱动读来的数据。
+binder_parse()在合适的时机，会回调其func参数（binder_handler func）指代的回调函数，即前文说到的svcmgr_handler()函数。
+inder_loop()就这样一直循环下去，完成了整个service manager service的工作。
+
+# Service Manager Service解析收到的命令
+
+```C
+int binder_parse(struct binder_state *bs, struct binder_io *bio,
+uint32_t *ptr, uint32_t size, binder_handler func)
+```
+之前利用ioctl()读取到的数据都记录在第三个参数ptr所指的缓冲区中，数据大小由size参数记录。其实这个buffer就是前文那个128字节的buffer。
+
+从驱动层读取到的数据，实际上是若干BR命令。每个BR命令是由一个命令号(uint32)以及若干相关数据组成的，不同BR命令的长度可能并不一样。
+
+每次ioctl()操作所读取的数据，可能会包含多个BR命令，所以binder_parse()需要用一个while循环来解析buffer中所有的BR命令。
+
+
+## binder_txn信息
+binder_txn说明了transaction到底在传输什么语义，而语义码就记录在其code域中。不同语义码需要携带的数据也是不同的，这些数据由data域指定。
+
+简单地说，我们从驱动侧读来的binder_txn只是一种“传输控制信息”，它本身并不包含传输的具体内容，而只是指出具体内容位于何处。现在，工作的重心要转到如何解析传输的具体内容了，即binder_txn的data域所指向的那部分内容。
+
+
+## svcmgr_handler()回调函数
+
+###  如何解析add service
+service manager进程里有一个全局性的svclist变量，记录着所有添加进系统的“service代理”信息，这些信息被组织成一条单向链表，即“服务向量表”。现在我们要看service manager是如何向这张表中添加新节点的。
+
+```c
+ case SVC_MGR_ADD_SERVICE:
+        s = bio_get_string16(msg, &len);
+        ptr = bio_get_ref(msg);
+        allow_isolated = bio_get_uint32(msg) ? 1 : 0;
+        if (do_add_service(bs, s, len, ptr, txn->sender_euid, allow_isolated))
+            return -1;
+        break;
+
+```
+假设某个服务进程调用Service Manager Service接口，向其注册service。这个注册动作到最后就会走到svcmgr_handler()的case SVC_MGR_ADD_SERVICE分支。
+
+binder_txn所指的数据区域中应该包含一个字符串，一个binder对象以及一个uint32数据。binder_object，记录的就是新注册的service所对应的代理信息。此时binder_object的pointer域实际上已经不是指针值了，而是一个binder句柄值。
+
+
+
+#### do_add_service
+并不是随便找个进程就能向系统注册service噢。do_add_service()函数一开始先调用svc_can_register()，判断发起端是否可以注册service。如果不可以，do_add_service()就返回-1值。
+
+#### svc_can_register
+如果发起端是root进程或者system server进程的话，是可以注册service的，另外，那些在allowed[]数组中有明确记录的用户进程，也是可以注册service的，至于其他绝大部分普通进程，很抱歉，不允许注册service。在以后的软件开发中，我们有可能需要编写新的带service的用户进程（uid不为0或AID_SYSTEM），并且希望把service注册进系统，此时不要忘了修改allowed[]数组。
+
+
+do_add_service()开始尝试在service链表里查询对应的service是否已经添加过了。如果可以查到，那么就不用生成新的service节点了。否则就需要在链表起始处再加一个新节点。节点类型为svcinfo。
+
+### 如何解析get service
+```c
+case SVC_MGR_GET_SERVICE:
+    case SVC_MGR_CHECK_SERVICE:
+        s = bio_get_string16(msg, &len);
+        ptr = do_find_service(bs, s, len, txn->sender_euid);
+        if (!ptr)
+            break;
+        bio_put_ref(reply, ptr);
+        return 0;
+```
+在service被注册进service manager之后，其他应用都可以调用ServiceManager的getService()来获取相应的服务代理，并调用代理的成员函数。这个getService()函数最终会向service manager进程发出SVC_MGR_GET_SERVICE命令。
+一开始从msg中读取希望get的服务名，然后调用do_find_service()函数查询服务名对应的句柄值，最后把句柄值写入reply。
+
+
