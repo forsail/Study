@@ -50,7 +50,35 @@ binder驱动 希望能把 binder_transaction节点 尽量放到 目标进程 里
 
 ## 红黑树节点的产生过程
 
-另一个要考虑的东西就是binder_proc里的那4棵树啦。前文在阐述binder_get_thread()时，已经看到过向threads树中添加节点的动作。那么其他3棵树的节点该如何添加呢？其实，秘密都在传输动作中。要知道，binder驱动在传输数据的时候，可不是仅仅简单地递送数据噢，它会分析被传输的数据，找出其中记录的binder对象，并生成相应的树节点。如果传输的是个binder实体对象，它不仅会在发起端对应的nodes树中添加一个binder_node节点，还会在目标端对应的refs_by_desc树、refs_by_node树中添加一个binder_ref节点，而且让binder_ref节点的node域指向binder_node节点。
+另一个要考虑的东西就是binder_proc里的那4棵树啦。前文在阐述binder_get_thread()时，已经看到过向threads树中添加节点的动作。那么其他3棵树的节点该如何添加呢？其实，秘密都在传输动作中。要知道，binder驱动在传输数据的时候，可不是仅仅简单地递送数据噢，它会分析被传输的数据，找出其中记录的binder对象，并生成相应的树节点。如果传输的是个binder实体对象，它不仅会在 发起端 对应的 nodes树 中添加一个 binder_node节点 ，还会在 目标端 对应的 refs_by_desc树、refs_by_node树中添加一个 binder_ref节点，而且让 binder_ref节点 的 node域 指向 binder_node节点。
+
+
+![传输图](http://static.oschina.net/uploads/img/201308/15213415_Dm2n.png)
+
+
+
+传输的时候,把binder对象整理成flat_binder_object变量，如果打扁的是binder实体，那么flat_binder_object用cookie域记录binder实体的指针，即BBinder指针，而如果打扁的是binder代理，那么flat_binder_object用handle域记录的binder代理的句柄值。
+
+
+然后flatten_binder()调用了一个关键的finish_flatten_binder()函数。这个函数内部会记录下刚刚被扁平化的flat_binder_object在parcel中的位置。说得更详细点儿就是，parcel对象内部会有一个buffer，记录着parcel中所有扁平化的数据，有些扁平数据是普通数据，而另一些扁平数据则记录着binder对象。所以parcel中会构造另一个mObjects数组，专门记录那些binder扁平数据所在的位置.
+
+一旦到了向驱动层传递数据的时候，IPCThreadState::writeTransactionData()会先把Parcel数据整理成一个binder_transaction_data数据.
+
+当 binder_transaction_data 传递到 binder驱动层 后，驱动层可以准确地分析出数据中到底有多少 binder 对象，并分别进行处理，从而产生出合适的红黑树节点。此时，如果产生的红黑树节点是 binder_node 的话，binder_node 的 cookie域 会被赋值成 flat_binder_object 所携带的 cookie值，也就是用户态的 BBinder地址值。这个新生成的 binder_node节点 被插入红黑树后，会一直严阵以待，以后当它成为另外某次传输动作的目标节点时，它的 cookie域 就派上用场了，此时 cookie值 会被反映到**用户态**，于是用户态就拿到了 BBinder对象。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
