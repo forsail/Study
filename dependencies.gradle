@@ -4,7 +4,7 @@ ext {
     android = [
             applicationId                 : "cn.steve.study",
             //最低和目标版本
-            minSdkVersion                 : 14,
+            minSdkVersion                 : 15,
             targetSdkVersion              : 25,
             // 编译SDK的版本
             compileSdkVersion             : 25,

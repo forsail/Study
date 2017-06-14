@@ -117,10 +117,7 @@
         <activity android:name="cn.steve.handler.HandlerActivity02"/>
         <!-- webview -->
         <activity android:name="cn.steve.webview.simple.WebViewActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <activity android:name="cn.steve.webview.simple.WebViewTestActivity">
         </activity>
@@ -694,6 +691,12 @@
                 android:name="cn.steve.task.launchmodel.StandardActivity"
                 android:launchMode="standard"
         />
+        <activity android:name="cn.steve.zip.ZipActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
