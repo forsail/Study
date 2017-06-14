@@ -14,7 +14,7 @@ Binder 是工作在 Linux 层面，属于一个驱动，只是这个驱动是不
 
 ## Binder 框架：一种架构
 
-Binder 框架提供可服务端接口、Binder 驱动、客户端接口三个模块。
+Binder 框架提供 服务端接口、Binder 驱动、客户端接口 三个模块。
 ![Binder架构](http://o9mhbhxlj.bkt.clouddn.com/Binder_1.png)
 
 1. 从服务端的角度来说，一个 Binder 服务端实际上就是一个 Binder 类的对象，该类一旦创建，内部就会启动一个隐藏线程。该线程接下来就用于接收 Binder 驱动发送来的消息，收到消息之后，会执行到Binder 对象中的 onTransact 方法，在这个方法中，根据不同的参数，执行不同的服务代码。因此，要实现一个 Binder 服务，就必须重载 onTransact 方法。

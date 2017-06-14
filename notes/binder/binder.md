@@ -26,7 +26,7 @@ IBinder接口类中定义了一个名为FLAG_ONEWAY的整型变量。当客户�
 
 在这个函数中，分别调用了下面的四个函数，完成四个类的初始化工作。
 - int_register_android_os_Binder:
-- int_register_android_os_BinderInternal
+- int_register_android_os_BinderInternal    
 - int_register_android_os_BinderProxy
 - int_register_android_os_Parcel
 
