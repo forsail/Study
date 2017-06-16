@@ -71,7 +71,7 @@ public class UILApplication extends MultiDexApplication {
             if (defaultProcess) {
                 Log.e("UILApplication", "默认的初始化");
                 initImageLoader(getApplicationContext());
-                initRealm();
+                //initRealm();
                 //initBaiduMap();
                 initStetho();
             }

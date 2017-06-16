@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.hzy.lib7z.Un7Zip;
 
@@ -25,7 +26,12 @@ public class ZipActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String filePath = "sdcard/lvmama/lvyuepage.7z";
                 String outPath = "sdcard/lvmama";
-                Un7Zip.extract7z(filePath, outPath);
+                boolean b = Un7Zip.extract7z(filePath, outPath);
+                if (b) {
+                    Toast.makeText(ZipActivity.this, "success", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ZipActivity.this, "failed", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

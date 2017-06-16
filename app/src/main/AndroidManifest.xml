@@ -691,12 +691,22 @@
                 android:name="cn.steve.task.launchmodel.StandardActivity"
                 android:launchMode="standard"
         />
+
         <activity android:name="cn.steve.zip.ZipActivity">
+
+        </activity>
+
+        <activity android:name="cn.steve.activityresult.ActivityResultActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name="cn.steve.activityresult.ActivityResultActivityB">
+
+        </activity>
+
+
     </application>
 
 </manifest>
