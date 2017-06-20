@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        android:orientation="vertical">
+
+    <TextView
+            android:id="@+id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/circle_round_line"
+            android:textColor="@color/white"
+            tools:text="D1"/>
+
+    <TextView
+            android:id="@+id/title"
+            android:layout_alignTop="@id/day"
+            android:layout_alignBottom="@id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/day"
+            android:layout_toEndOf="@id/day"
+            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
+            android:textSize="16dp"
+            android:textColor="@color/white"
+            tools:text="大阪 - 京都"/>
+
+    <TextView
+            android:id="@+id/scenes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/title"
+            android:layout_alignStart="@id/title"
+            android:layout_below="@id/title"
+            android:paddingBottom="10dp"
+            android:textSize="14dp"
+            android:textColor="#cccccc"
+            tools:text="大阪城公园\n本愿寺"/>
+
+    <FrameLayout
+            android:id="@+id/line_normal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/day"
+            android:layout_alignLeft="@id/day"
+            android:layout_alignRight="@id/day"
+            android:layout_alignTop="@id/scenes"
+            android:layout_alignBottom="@id/scenes"
+            android:gravity="center">
+
+        <View
+                android:layout_width="2dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"/>
+    </FrameLayout>
+
+</RelativeLayout>

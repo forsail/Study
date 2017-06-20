@@ -697,15 +697,18 @@
         </activity>
 
         <activity android:name="cn.steve.activityresult.ActivityResultActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <activity android:name="cn.steve.activityresult.ActivityResultActivityB">
 
         </activity>
 
+        <activity android:name="cn.steve.floatingnavigation.NavigationMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
 
     </application>
 

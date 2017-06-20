@@ -251,4 +251,11 @@
         <item name="layout_columnWeight">1</item>
         <item name="android:onClick">imageClick</item>
     </style>
+
+    <style name="navigationPopWindowStyle">
+
+        <!-- PopupWindow左右弹出的效果 -->
+        <item name="android:windowEnterAnimation">@anim/in_right2left</item>
+        <item name="android:windowExitAnimation">@anim/out_left2right</item>
+    </style>
 </resources>

@@ -14,7 +14,7 @@ android {
         renderscriptTargetApi rootProject.ext.android.renderscriptTargetApi
         renderscriptSupportModeEnabled rootProject.ext.android.renderscriptSupportModeEnabled
         multiDexEnabled true
-		
+
     }
     productFlavors {
         // Define separate dev and prod product flavors.
