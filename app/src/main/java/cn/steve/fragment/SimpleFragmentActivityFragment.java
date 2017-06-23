@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cn.steve.pullscrollview.CoordinatorLayoutActivity;
+import cn.steve.coordinatorlayout.CoordinatorLayoutActivity;
 import cn.steve.study.R;
 
 /**
