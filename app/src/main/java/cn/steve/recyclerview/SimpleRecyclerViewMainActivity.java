@@ -13,7 +13,7 @@ import cn.steve.study.R;
 /**
  * Created by Steve on 2015/8/19.
  */
-public class SimpleRecyclerViewMainActivity extends Activity {
+public class SimpleRecyclerViewMainActivity extends Activity implements GroupListener {
 
     private RecyclerView mRecyclerView;
     private SimpleRecyclerAdapter mAdapter;
@@ -26,7 +26,7 @@ public class SimpleRecyclerViewMainActivity extends Activity {
 
         //创建默认的线性LayoutManager ;设置成横向的,默认为竖屏的
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
-        mLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         //设置表格状的
@@ -54,13 +54,24 @@ public class SimpleRecyclerViewMainActivity extends Activity {
             });
 
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addItemDecoration(new SimpleDecoration());
+        StickyDecoration stickyDecoration = StickyDecoration.Builder
+            .init(this)
+            .setGroupBackground(getResources().getColor(R.color.google_yellow))
+            .build();
+        mRecyclerView.addItemDecoration(stickyDecoration);
     }
 
     private String[] getDummyDatas() {
-        String[] datas = new String[200];
+        String[] datas = new String[20];
         for (int i = 0; i < datas.length; i++) {
             datas[i] = "Data" + i;
         }
         return datas;
+    }
+
+    @Override
+    public String getGroupName(int position) {
+        return (position / 4 + 1) + "";
     }
 }

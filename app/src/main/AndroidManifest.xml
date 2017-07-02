@@ -179,6 +179,10 @@
 
         <!-- recyclerview -->
         <activity android:name="cn.steve.recyclerview.SimpleRecyclerViewMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <activity android:name="cn.steve.recyclerview.multipleitem.MultipleItemMainActivity"/>
         <activity android:name="cn.steve.recyclerview.itemanimator.RecyclerViewItemAnimatorActivity">
@@ -317,10 +321,7 @@
         <activity
                 android:name="cn.steve.coordinatorlayout.CoordinatorLayoutActivity"
                 android:theme="@style/AppNoActionBarTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
 
         <!-- 滑动有回弹的效果 -->
@@ -438,8 +439,9 @@
                 android:theme="@style/AppNoActionBarTheme">
         </activity>
         <!-- bottom sheet -->
-        <activity android:name="cn.steve.share.simple.BottomSheetShareActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity
+                android:name="cn.steve.share.simple.BottomSheetShareActivity"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
         <!-- 打印定制的log -->
@@ -670,7 +672,7 @@
 
         </activity>
         <activity android:name="cn.steve.task.TaskActivityB"
-        >
+                >
         </activity>
         <activity android:name="cn.steve.task.TaskActivityC">
         </activity>
@@ -682,19 +684,19 @@
         <activity
                 android:name="cn.steve.task.launchmodel.SingleInstanceActivity"
                 android:launchMode="singleInstance"
-        />
+                />
         <activity
                 android:name="cn.steve.task.launchmodel.SingleTaskActivity"
                 android:launchMode="singleTask"
-        />
+                />
         <activity
                 android:name="cn.steve.task.launchmodel.SingleTopActivity"
                 android:launchMode="singleTop"
-        />
+                />
         <activity
                 android:name="cn.steve.task.launchmodel.StandardActivity"
                 android:launchMode="standard"
-        />
+                />
 
         <activity android:name="cn.steve.zip.ZipActivity">
 
