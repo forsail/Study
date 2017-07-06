@@ -1,1 +1,22 @@
 include ':app', ':mylib', ':lib_http', ':advanced', ':aarmodule'
+
+Properties property = getProperties(new File(rootDir, 'local.properties'))
+property.entrySet().each { entry ->
+    if (entry.key == "projectName") {
+        rootProject.name = entry.value
+    }
+}
+
+def static getProperties(File propFile) {
+    if (!propFile.exists()) {
+        throw new IOException(propFile.name + ' not exists')
+    }
+    InputStream input = new BufferedInputStream(new FileInputStream(propFile))
+    try {
+        Properties properties = new Properties()
+        properties.load(input)
+        return properties
+    } finally {
+        input.close()
+    }
+}
