@@ -15,14 +15,14 @@ Binder 是工作在 Linux 层面，属于一个驱动，只是这个驱动是不
 ## Binder 框架：一种架构
 
 Binder 框架提供 服务端接口、Binder 驱动、客户端接口 三个模块。
-![Binder架构](http://o9mhbhxlj.bkt.clouddn.com/Binder_1.png)
+![Binder架构](http://o9mhbhxlj.bkt.clouddn.com/Binder%E6%A1%86%E6%9E%B6%E5%9B%BE.png)
 
-1. 从服务端的角度来说，一个 Binder 服务端实际上就是一个 Binder 类的对象，该类一旦创建，内部就会启动一个隐藏线程。该线程接下来就用于接收 Binder 驱动发送来的消息，收到消息之后，会执行到Binder 对象中的 onTransact 方法，在这个方法中，根据不同的参数，执行不同的服务代码。因此，要实现一个 Binder 服务，就必须重载 onTransact 方法。
+1. 从服务端的角度来说，一个 Binder 服务端实际上就是一个 Binder 类的对象，该类一旦创建，内部就会启动一个隐藏线程。该线程接下来就用于接收 Binder 驱动发送来的消息，收到消息之后，会执行到 Binder 对象中的 onTransact 方法，在这个方法中，根据不同的参数，执行不同的服务代码。因此，要实现一个 Binder 服务，就必须重载 onTransact 方法。
 在 onTransact 方法中，会获取传递进来的参数，将其转换成服务函数的参数。onTransact  参数的来源于 客户端的调用  transact 方法。所以，如果  transact 方法的参数有固定的格式输入，那么 onTransact 就会有相应的固定格式输出。
 
 2. 从 Binder 驱动的角度来说。任何一个服务端的 Binder 对象被创建的时候，都同时会在 Binder 驱动中创建一个 mRemote 对象，这个对象也是 Binder 类。客户端想要访问远程服务的时候，都是通过这个 mRemote 对象。
 
-3. 从客户端的角度来说。要想访问远程服务，必须先获取远程服务在 Binder 驱动中对应的 mRemote 引用，在获取该对象之后，就可以调用 transact 方法，而在 Binder 驱动中，mRemote  对象也重载了  transact  方法。
+3. 从客户端的角度来说。要想访问远程服务，必须先获取远程服务在 Binder 驱动中对应的 mRemote 引用，在获取该对象之后，就可以调用 transact 方法，而在 Binder 驱动中，mRemote  对象也重载了 transact 方法。
 - 以线程间消息通信的模式，向服务端发送客户端传递过来的参数。
 - 挂起当前的线程，当前线程正是客户端线程，并等待服务端线程执行完指定服务函数之后通知。
 - 接收服务端线程的通知，然后继续执行客户端线程，并返回客户端代码区。
@@ -35,7 +35,7 @@ Binder 框架提供 服务端接口、Binder 驱动、客户端接口 三个模�
 客户端利用这个引用去发送消息给驱动，驱动利用这个引用去发送消息给服务端， 整个过程像客户端直接调用了服务端，事实上是通过 Binder 驱动中转了，存在两个 Binder 对象，一个是服务端的 Binder 对象， 一个是 驱动中的 Binder  对象，区别中，Binder 驱动中不会产生额外的线程，而服务端的 Binder 在创建之初就有一个隐含的线程。
 
 
-## 设计 server 端
+## 设计 Server 端
 
 设计 server 端只需要新建一个继承 Binder 的 service 即可，当启动这个 service 的时候，在 ddms 中的 thread 会发现多了一个 Binder thread 。
 定义完  service ，接下来需要重载 onTrasact 方法，并从 data 变量中读取客户端传递进来的参数。 假如，这里有很多参数，那么怎么知道参数的顺序呢？所以，这个需要一个双方的约定。
@@ -98,7 +98,7 @@ public interface ServiceConnection {
 bindService 方法第一个参数是启动 service 的intent ，第二个参数是一个接口，接口中有个方法叫 onServiceConnected 这个方法含有两个参数，第二个参数就是 Binder 。
 具体的运行过程中，当客户端请求启动 service 的时候，请求就会通过 Ams 发出，若 service 正常去懂了，那么 Ams 就会远程调用 ActivityThread 类中的 ApplicationThread 对象，调用的参数就包含了 service 的 Binder  对象的引用，然后在 ApplicationThread  中回调 bindService 的第二个参数 ServiceConnection  的方法 onServiceConnected ，将 Binder 引用传递回客户端，这样客户端就拿到了远程服务的 Binder  对象引用，在实际操作中，常常可以这个 Binder 对象引用设置成一个全局变量，可以在客户端的任何地方都可以访问到。
 
-![Binder架构](http://o9mhbhxlj.bkt.clouddn.com/Binder_2.png)
+![Binder客户端和服务端的调用过程](http://o9mhbhxlj.bkt.clouddn.com/Binder%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%92%8C%E6%9C%8D%E5%8A%A1%E7%AB%AF%E7%9A%84%E8%B0%83%E7%94%A8%E8%BF%87%E7%A8%8B.png)
 
 ## 保证参数顺序的工具-AIDL
 
@@ -129,7 +129,7 @@ aidl 文件中可以引用其他的 Java 类，但是需要遵循以下要求：
 
 # 总结
 本篇最后,放一张图进行总结.
-![Binder架构](http://o9mhbhxlj.bkt.clouddn.com/Binder_4.png)
+![Binder绑定的流程](http://o9mhbhxlj.bkt.clouddn.com/Binder%E7%BB%91%E5%AE%9A%E7%9A%84%E6%B5%81%E7%A8%8B.png)
 
 
 # 感激,非常感激，万分的感激！
