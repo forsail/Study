@@ -120,6 +120,10 @@
 
         </activity>
         <activity android:name="cn.steve.webview.simple.WebViewTestActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
         <!-- broadcast -->
         <activity android:name="cn.steve.broadcast.NormalBroadCastActivity"/>
@@ -179,10 +183,7 @@
 
         <!-- recyclerview -->
         <activity android:name="cn.steve.recyclerview.SimpleRecyclerViewMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
         <activity android:name="cn.steve.recyclerview.multipleitem.MultipleItemMainActivity"/>
         <activity android:name="cn.steve.recyclerview.itemanimator.RecyclerViewItemAnimatorActivity">

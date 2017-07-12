@@ -31,6 +31,11 @@ public class WebViewTestActivity extends AppCompatActivity {
         WebSettings webSettings = webView.getSettings();
         //要能JS交互，需要设置为true
         webSettings.setJavaScriptEnabled(true);
+        //nativeCallJS();
+        loadLocalHTML();
+    }
+
+    private void nativeCallJS() {
         //Note that injected objects will not appear in JavaScript until the page is next (re)loaded
         webView.addJavascriptInterface(new JsObject(), "injectedObject");
         webView.loadData("", "text/html", null);
@@ -39,6 +44,7 @@ public class WebViewTestActivity extends AppCompatActivity {
 
     private void loadLocalHTML() {
         webView.addJavascriptInterface(new WebAppInterface(this), "Android");
+        webView.addJavascriptInterface(new H5Plugin(this), "H5Plugin");
         webView.loadUrl("file:///android_asset/test.html");
     }
 
