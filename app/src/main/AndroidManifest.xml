@@ -30,7 +30,9 @@
     <!-- 获取模拟定位信息 -->
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_GPS"/>
-
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.CAMERA2" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <application
             android:name="cn.steve.UILApplication"
             android:allowBackup="true"

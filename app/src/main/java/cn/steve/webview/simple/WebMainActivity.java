@@ -7,18 +7,24 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +40,78 @@ public class WebMainActivity extends Activity {
     private ValueCallback<Uri> mUploadMessage;
     private ValueCallback<Uri[]> mFilePathCallbackArray;
     private boolean onShowFileChooser;
+    private Uri imageUri;
 
+    public static String convertImageUriToFile(Uri imageUri, Activity activity) {
+        Cursor cursor = null;
+        int imageID = 0;
+
+        try {
+
+            /*********** Which columns values want to get *******/
+            String[] proj = {
+                MediaStore.Images.Media.DATA,
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.Thumbnails._ID,
+                MediaStore.Images.ImageColumns.ORIENTATION
+            };
+
+            cursor = activity.managedQuery(
+
+                imageUri,         //  Get data for specific image URI
+                proj,             //  Which columns to return
+                null,             //  WHERE clause; which rows to return (all rows)
+                null,             //  WHERE clause selection arguments (none)
+                null              //  Order-by clause (ascending by name)
+
+            );
+
+            //  Get Query Data
+
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID);
+            int columnIndexThumb = cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails._ID);
+            int file_ColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+
+            //int orientation_ColumnIndex = cursor.
+            //    getColumnIndexOrThrow(MediaStore.Images.ImageColumns.ORIENTATION);
+
+            int size = cursor.getCount();
+
+            /*******  If size is 0, there are no images on the SD Card. *****/
+
+            if (size == 0) {
+            } else {
+
+                int thumbID = 0;
+                if (cursor.moveToFirst()) {
+
+                    /**************** Captured image details ************/
+
+                    /*****  Used to show image on view in LoadImagesFromSDCard class ******/
+                    imageID = cursor.getInt(columnIndex);
+
+                    thumbID = cursor.getInt(columnIndexThumb);
+
+                    String Path = cursor.getString(file_ColumnIndex);
+
+                    //String orientation =  cursor.getString(orientation_ColumnIndex);
+
+                    String CapturedImageDetails = " CapturedImageDetails : \n\n"
+                                                  + " ImageID :" + imageID + "\n"
+                                                  + " ThumbID :" + thumbID + "\n"
+                                                  + " Path :" + Path + "\n";
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        // Return Captured Image ImageID ( By this ImageID Image will load from sdcard )
+
+        return "" + imageID;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +127,7 @@ public class WebMainActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == FILECHOOSER_RESULTCODE) {
+        if (requestCode == FILECHOOSER_RESULTCODE) {
             if (!onShowFileChooser) {
                 if (null == mUploadMessage) {
                     return;
@@ -88,16 +165,15 @@ public class WebMainActivity extends Activity {
                 if (dataString != null) {
                     results = new Uri[]{Uri.parse(dataString)};
                 }
+            }else {
+                results = new Uri[]{imageUri};
             }
         }
         mFilePathCallbackArray.onReceiveValue(results);
         mFilePathCallbackArray = null;
     }
 
-
     private class MainWebChromeClient extends WebChromeClient {
-
-        private Uri imageUri;
 
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
@@ -131,28 +207,7 @@ public class WebMainActivity extends Activity {
             onShowFileChooser = true;
             mFilePathCallbackArray = filePathCallback;
 
-            File imageStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MyApp");
-            // Create the storage directory if it does not exist
-            if (!imageStorageDir.exists()) {
-                imageStorageDir.mkdirs();
-            }
-            File file = new File(imageStorageDir + File.separator + "IMG_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
-            imageUri = Uri.fromFile(file);
-
-            final List<Intent> cameraIntents = new ArrayList<Intent>();
-            final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            final PackageManager packageManager = getPackageManager();
-            final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
-            for (ResolveInfo res : listCam) {
-                final String packageName = res.activityInfo.packageName;
-                final Intent i = new Intent(captureIntent);
-                i.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-                i.setPackage(packageName);
-                i.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                cameraIntents.add(i);
-            }
-
-
+            final List<Intent> cameraIntents = getIntents();
             Intent i = new Intent(Intent.ACTION_GET_CONTENT);
             i.addCategory(Intent.CATEGORY_OPENABLE);
             i.setType("image/*");
@@ -164,7 +219,20 @@ public class WebMainActivity extends Activity {
         }
 
         private void openFileChooserImpl(ValueCallback<Uri> uploadMsg, String typeStr) {
-            File imageStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "MyApp");
+            final List<Intent> cameraIntents = getIntents();
+
+            mUploadMessage = uploadMsg;
+            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            i.addCategory(Intent.CATEGORY_OPENABLE);
+            i.setType("image/*");
+            Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
+            startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
+        }
+
+        @NonNull
+        private List<Intent> getIntents() {
+            File imageStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "LVMM");
             // Create the storage directory if it does not exist
             if (!imageStorageDir.exists()) {
                 imageStorageDir.mkdirs();
@@ -172,7 +240,7 @@ public class WebMainActivity extends Activity {
             File file = new File(imageStorageDir + File.separator + "IMG_" + String.valueOf(System.currentTimeMillis()) + ".jpg");
             imageUri = Uri.fromFile(file);
 
-            final List<Intent> cameraIntents = new ArrayList<Intent>();
+            final List<Intent> cameraIntents = new ArrayList<>();
             final Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             final PackageManager packageManager = getPackageManager();
             final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
@@ -184,15 +252,64 @@ public class WebMainActivity extends Activity {
                 i.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
                 cameraIntents.add(i);
             }
-
-            mUploadMessage = uploadMsg;
-            Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-            i.addCategory(Intent.CATEGORY_OPENABLE);
-            i.setType("image/*");
-            Intent chooserIntent = Intent.createChooser(i, "Image Chooser");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[]{}));
-            startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE);
+            return cameraIntents;
         }
     }
 
+    private class LoadImagesFromSDCard extends AsyncTask<String, Void, Void> {
+
+        Bitmap mBitmap;
+
+        protected void onPreExecute() {
+        }
+
+        protected Void doInBackground(String... urls) {
+            Bitmap bitmap = null;
+            Bitmap newBitmap = null;
+            Uri uri = null;
+            try {
+                /**  Uri.withAppendedPath Method Description
+                 * Parameters
+                 *    baseUri  Uri to append path segment to
+                 *    pathSegment  encoded path segment to append
+                 * Returns
+                 *    a new Uri based on baseUri with the given segment appended to the path
+                 */
+
+                uri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + urls[0]);
+
+                /**************  Decode an input stream into a bitmap. *********/
+                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+
+                if (bitmap != null) {
+
+                    /********* Creates a new bitmap, scaled from an existing bitmap. ***********/
+
+                    newBitmap = Bitmap.createScaledBitmap(bitmap, 170, 170, true);
+
+                    bitmap.recycle();
+
+                    if (newBitmap != null) {
+
+                        mBitmap = newBitmap;
+                    }
+                }
+            } catch (IOException e) {
+                // Error fetching image, try to recover
+
+                /********* Cancel execution of this task. **********/
+                cancel(true);
+            }
+
+            return null;
+        }
+
+
+        protected void onPostExecute(Void unused) {
+            // NOTE: You can call UI Element here.
+            // Close progress dialog
+            if (mBitmap != null) {
+            }
+        }
+    }
 }
