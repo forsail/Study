@@ -1,0 +1,140 @@
+package cn.steve.camera;
+
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
+import android.webkit.ValueCallback;
+
+import java.io.File;
+
+import cn.steve.study.BuildConfig;
+
+
+/**
+ * Created by SteveYan on 2017/7/17.
+ */
+
+public class ImageChoosePlugin {
+
+    public final static int FILECHOOSER_RESULTCODE = 0x00012;
+    private Activity activity;
+    private Uri takePhotoUri;
+    private boolean onShowFileChooser;
+    private ValueCallback<Uri> mUploadMessage;
+    private ValueCallback<Uri[]> mFilePathCallbackArray;
+
+    public ImageChoosePlugin(Activity activity, ValueCallback<Uri> uploadMessage, ValueCallback<Uri[]> filePathCallbackArray) {
+        this.activity = activity;
+        this.mUploadMessage = uploadMessage;
+        this.mFilePathCallbackArray = filePathCallbackArray;
+        this.onShowFileChooser = filePathCallbackArray != null;
+    }
+
+    private Intent getGalleryIntent() {
+        Intent gallery = new Intent(Intent.ACTION_GET_CONTENT);
+        gallery.addCategory(Intent.CATEGORY_OPENABLE);
+        gallery.setType("image/*");
+        gallery.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        return gallery;
+    }
+
+
+    private Intent getCameraIntent() {
+        Intent intent = new Intent();
+        // 指定开启系统相机的Action
+        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
+        File outDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        if (!outDir.exists()) {
+            boolean success = outDir.mkdirs();
+        }
+        File outFile = new File(outDir, System.currentTimeMillis() + ".jpg");
+        // 把文件地址转换成Uri格式
+        takePhotoUri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID + ".provider", outFile);
+        // 设置系统相机拍摄照片完成后图片文件的存放地址
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, takePhotoUri);
+        // 此值在最低质量最小文件尺寸时是0，在最高质量最大文件尺寸时是１
+        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 0);
+        return intent;
+    }
+
+    public void showMyDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+        CharSequence[] items = new CharSequence[]{"相机", "相册"};
+        builder.setTitle("选择图片方式").setItems(items, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                Intent intent = null;
+                switch (which) {
+                    case 0:
+                        intent = getCameraIntent();
+                        Intent cameraIntent = Intent.createChooser(intent, "选择相机");
+                        activity.startActivityForResult(cameraIntent, FILECHOOSER_RESULTCODE);
+                        break;
+                    case 1:
+                        intent = getGalleryIntent();
+                        Intent galleryIntent = Intent.createChooser(intent, "选择相册");
+                        activity.startActivityForResult(galleryIntent, FILECHOOSER_RESULTCODE);
+                        break;
+                }
+            }
+        });
+        builder.show();
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case FILECHOOSER_RESULTCODE:
+                if (!onShowFileChooser) {
+                    if (null == mUploadMessage) {
+                        return;
+                    }
+                    Uri result = data == null ? null : data.getData();
+                    mUploadMessage.onReceiveValue(result);
+                    mUploadMessage = null;
+                } else {
+                    if (null == mFilePathCallbackArray) {
+                        return;
+                    }
+                    onActivityResultAboveL(requestCode, resultCode, data);
+                }
+        }
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void onActivityResultAboveL(int requestCode, int resultCode, Intent data) {
+        if (requestCode != FILECHOOSER_RESULTCODE || mFilePathCallbackArray == null) {
+            return;
+        }
+        Uri[] results = null;
+        if (resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                String dataString = data.getDataString();
+                ClipData clipData = data.getClipData();
+                if (clipData != null) {
+                    results = new Uri[clipData.getItemCount()];
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        results[i] = item.getUri();
+                    }
+                }
+                if (dataString != null) {
+                    results = new Uri[]{Uri.parse(dataString)};
+                }
+            } else {
+                results = new Uri[]{takePhotoUri};
+            }
+        }
+        mFilePathCallbackArray.onReceiveValue(results);
+        mFilePathCallbackArray = null;
+    }
+
+}
