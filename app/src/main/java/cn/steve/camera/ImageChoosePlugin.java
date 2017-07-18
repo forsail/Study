@@ -17,6 +17,8 @@ import java.io.File;
 
 import cn.steve.study.BuildConfig;
 
+import static android.app.Activity.RESULT_OK;
+
 
 /**
  * Created by SteveYan on 2017/7/17.
@@ -24,18 +26,23 @@ import cn.steve.study.BuildConfig;
 
 public class ImageChoosePlugin {
 
-    public final static int FILECHOOSER_RESULTCODE = 0x00012;
+    private final static int FILECHOOSER_RESULTCODE = 0x00012;
     private Activity activity;
     private Uri takePhotoUri;
-    private boolean onShowFileChooser;
+    private boolean aboveL;
     private ValueCallback<Uri> mUploadMessage;
     private ValueCallback<Uri[]> mFilePathCallbackArray;
+    private Uri[] selectedAboveL;
+    private Uri selectedBelowL;
 
-    public ImageChoosePlugin(Activity activity, ValueCallback<Uri> uploadMessage, ValueCallback<Uri[]> filePathCallbackArray) {
+    public ImageChoosePlugin(Activity activity) {
         this.activity = activity;
-        this.mUploadMessage = uploadMessage;
+    }
+
+    public void setValueCallback(ValueCallback<Uri> mUploadMessage, ValueCallback<Uri[]> filePathCallbackArray) {
+        this.mUploadMessage = mUploadMessage;
         this.mFilePathCallbackArray = filePathCallbackArray;
-        this.onShowFileChooser = filePathCallbackArray != null;
+        this.aboveL = filePathCallbackArray != null;
     }
 
     private Intent getGalleryIntent() {
@@ -68,23 +75,35 @@ public class ImageChoosePlugin {
     public void showMyDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(activity);
         CharSequence[] items = new CharSequence[]{"相机", "相册"};
-        builder.setTitle("选择图片方式").setItems(items, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                Intent intent = null;
-                switch (which) {
-                    case 0:
-                        intent = getCameraIntent();
-                        Intent cameraIntent = Intent.createChooser(intent, "选择相机");
-                        activity.startActivityForResult(cameraIntent, FILECHOOSER_RESULTCODE);
-                        break;
-                    case 1:
-                        intent = getGalleryIntent();
-                        Intent galleryIntent = Intent.createChooser(intent, "选择相册");
-                        activity.startActivityForResult(galleryIntent, FILECHOOSER_RESULTCODE);
-                        break;
+        builder
+            .setTitle("选择图片方式")
+            .setItems(items, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent intent = null;
+                    switch (which) {
+                        case 0:
+                            intent = getCameraIntent();
+                            Intent cameraIntent = Intent.createChooser(intent, "选择相机");
+                            activity.startActivityForResult(cameraIntent, FILECHOOSER_RESULTCODE);
+                            break;
+                        case 1:
+                            intent = getGalleryIntent();
+                            Intent galleryIntent = Intent.createChooser(intent, "选择相册");
+                            activity.startActivityForResult(galleryIntent, FILECHOOSER_RESULTCODE);
+                            break;
+                    }
                 }
-            }
-        });
+            })
+            .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    if (aboveL) {
+                        mFilePathCallbackArray.onReceiveValue(selectedAboveL);
+                    } else {
+                        mUploadMessage.onReceiveValue(selectedBelowL);
+                    }
+                }
+            });
         builder.show();
     }
 
@@ -92,13 +111,8 @@ public class ImageChoosePlugin {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case FILECHOOSER_RESULTCODE:
-                if (!onShowFileChooser) {
-                    if (null == mUploadMessage) {
-                        return;
-                    }
-                    Uri result = data == null ? null : data.getData();
-                    mUploadMessage.onReceiveValue(result);
-                    mUploadMessage = null;
+                if (!aboveL) {
+                    onActivityResultBelowL(requestCode, resultCode, data);
                 } else {
                     if (null == mFilePathCallbackArray) {
                         return;
@@ -108,32 +122,41 @@ public class ImageChoosePlugin {
         }
     }
 
+    private void onActivityResultBelowL(int requestCode, int resultCode, Intent data) {
+        if (null == mUploadMessage) {
+            return;
+        }
+        if (resultCode == RESULT_OK) {
+            selectedBelowL = data == null ? null : data.getData();
+        }
+        mUploadMessage.onReceiveValue(selectedBelowL);
+        mUploadMessage = null;
+    }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void onActivityResultAboveL(int requestCode, int resultCode, Intent data) {
         if (requestCode != FILECHOOSER_RESULTCODE || mFilePathCallbackArray == null) {
             return;
         }
-        Uri[] results = null;
-        if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             if (data != null) {
                 String dataString = data.getDataString();
                 ClipData clipData = data.getClipData();
                 if (clipData != null) {
-                    results = new Uri[clipData.getItemCount()];
+                    selectedAboveL = new Uri[clipData.getItemCount()];
                     for (int i = 0; i < clipData.getItemCount(); i++) {
                         ClipData.Item item = clipData.getItemAt(i);
-                        results[i] = item.getUri();
+                        selectedAboveL[i] = item.getUri();
                     }
                 }
                 if (dataString != null) {
-                    results = new Uri[]{Uri.parse(dataString)};
+                    selectedAboveL = new Uri[]{Uri.parse(dataString)};
                 }
             } else {
-                results = new Uri[]{takePhotoUri};
+                selectedAboveL = new Uri[]{takePhotoUri};
             }
         }
-        mFilePathCallbackArray.onReceiveValue(results);
+        mFilePathCallbackArray.onReceiveValue(selectedAboveL);
         mFilePathCallbackArray = null;
     }
 

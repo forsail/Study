@@ -24,17 +24,14 @@ public class CameraActivity extends Activity {
         findViewById(R.id.buttonMain).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ImageChoosePlugin imageChoosePlugin = new ImageChoosePlugin(CameraActivity.this);
-                imageChoosePlugin.showMyDialog();
+
             }
         });
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        
     }
 
 }
