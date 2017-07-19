@@ -107,4 +107,20 @@ public class NetWorkUtils {
                 return false;
         }
     }
+
+    // 是否联网网络
+    public static boolean isNetworkAvailable(final Context context) {
+        try {
+            ConnectivityManager manger = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            if (manger != null && manger.getActiveNetworkInfo() != null) {
+                NetworkInfo info = manger.getActiveNetworkInfo();
+                if (info.isConnected()) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
 }

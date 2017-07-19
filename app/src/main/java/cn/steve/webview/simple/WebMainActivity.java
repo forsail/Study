@@ -8,9 +8,11 @@ import android.support.annotation.Nullable;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import cn.steve.camera.ImageChoosePlugin;
 import cn.steve.study.R;
+import steve.cn.mylib.util.NetWorkUtils;
 
 /**
  * Created by SteveYan on 2017/6/5.
@@ -28,6 +30,14 @@ public class WebMainActivity extends Activity {
         mWebView.loadUrl(url);
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.setWebChromeClient(new MainWebChromeClient());
+        checkNetwork();
+    }
+
+
+    private void checkNetwork() {
+        if (!NetWorkUtils.isNetworkAvailable(this)) {
+            Toast.makeText(this, "网络必须可用", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
