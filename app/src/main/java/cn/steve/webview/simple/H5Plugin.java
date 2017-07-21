@@ -18,6 +18,6 @@ public class H5Plugin {
 
     @JavascriptInterface
     public void showToast(String toast) {
-        Toast.makeText(mContext, toast, Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, "H5Plugin" + toast, Toast.LENGTH_SHORT).show();
     }
 }
