@@ -363,8 +363,6 @@
         <activity android:name="cn.steve.listview.robot.OnlineActivity">
         </activity>
         <!-- 测试webview的高级用法 -->
-        <activity android:name="cn.steve.webview.advanced.AdvancedWebViewTestActivity">
-        </activity>
         <!-- 测试自定义drawable -->
         <activity android:name="cn.steve.drawable.CustomDrawableMainActivity">
         </activity>
