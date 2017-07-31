@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
@@ -83,9 +82,10 @@ public class Html5Activity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Bundle bundle = getIntent().getBundleExtra("bundle");
-        mUrl = bundle.getString("url");
-
-        Log.d("Url:", mUrl);
+        if (bundle!=null){
+            mUrl = bundle.getString("url");
+        }
+        String url = "file:///android_asset/mutilwindow.html";
 
         mLayout = (LinearLayout) findViewById(R.id.mainContent);
 
@@ -110,7 +110,7 @@ public class Html5Activity extends AppCompatActivity {
 
         mWebView.setWebChromeClient(webChromeClient);
         mWebView.setWebViewClient(webViewClient);
-        mWebView.loadUrl(mUrl);
+        mWebView.loadUrl(url);
     }
 
     @Override

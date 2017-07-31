@@ -363,6 +363,12 @@
         <activity android:name="cn.steve.listview.robot.OnlineActivity">
         </activity>
         <!-- 测试webview的高级用法 -->
+        <activity android:name="cn.steve.webview.advanced.Html5Activity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
         <!-- 测试自定义drawable -->
         <activity android:name="cn.steve.drawable.CustomDrawableMainActivity">
         </activity>
@@ -716,10 +722,7 @@
         </activity>
 
         <activity android:name="cn.steve.webview.simple.WebMainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+
         </activity>
 
         <activity android:name="cn.steve.camera.CameraActivity">
