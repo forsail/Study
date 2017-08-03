@@ -1,0 +1,2 @@
+目前公司在做多开。发现一个问题，如何判断一个链接是重定向。对于7.0之后系统原生支持。对于7.0之前的版本如何实现呢？
+参考一个 帖子 https://stackoverflow.com/questions/3852414/in-a-webview-is-there-a-way-for-shouldoverrideurlloading-to-determine-if-it-is-c/45477862#45477862
