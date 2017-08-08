@@ -30,9 +30,10 @@
     <!-- 获取模拟定位信息 -->
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_GPS"/>
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.CAMERA2" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA2"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
     <application
             android:name="cn.steve.UILApplication"
             android:allowBackup="true"
@@ -364,6 +365,9 @@
         </activity>
         <!-- 测试webview的高级用法 -->
         <activity android:name="cn.steve.webview.advanced.Html5Activity">
+
+        </activity>
+        <activity android:name="cn.steve.webview.advanced.ReturnValueActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
